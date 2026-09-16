@@ -2,482 +2,2711 @@
 <html lang="zh-Hant" data-theme="light">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
   <meta name="theme-color" content="#f5f4ef">
   <title>店面記帳簿</title>
+
   <link rel="preconnect" href="https://api.fontshare.com">
-  <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=general-sans@600,700&display=swap" rel="stylesheet">
-  <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
-  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <link
+    href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=general-sans@600,700&display=swap"
+    rel="stylesheet"
+  >
+
+  <script
+    src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js"
+    defer
+  ></script>
+
+  <script
+    src="https://accounts.google.com/gsi/client"
+    async
+    defer
+  ></script>
+
   <style>
-    /* Art direction: small-shop ledger → warm, calm, trustworthy.
-       Palette: paper neutrals with restrained teal; Typography: General Sans + Satoshi; Density: balanced. */
-    :root,[data-theme="light"]{
-      --bg:#f5f4ef;--surface:#fffefb;--surface-2:#efede6;--surface-dynamic:#e5e2d9;
-      --text:#252820;--muted:#62675d;--faint:#7d8378;--inverse:#fffefb;
-      --primary:#146c5c;--primary-hover:#0d594b;--primary-soft:#dcebe5;
-      --success:#3b7448;--success-hover:#2d6039;--success-soft:#e0ece1;
-      --danger:#9a4938;--danger-soft:#f3e2dc;--border:color-mix(in oklab,var(--text) 13%,transparent);
-      --shadow-sm:0 1px 2px rgba(39,45,34,.06);--shadow-md:0 10px 30px rgba(39,45,34,.09);--shadow-lg:0 18px 55px rgba(39,45,34,.15);
-      --radius-sm:.5rem;--radius-md:.75rem;--radius-lg:1rem;--radius-xl:1.25rem;--radius-full:999px;
-      --space-1:.25rem;--space-2:.5rem;--space-3:.75rem;--space-4:1rem;--space-5:1.25rem;--space-6:1.5rem;--space-8:2rem;--space-10:2.5rem;--space-12:3rem;--space-16:4rem;
-      --text-xs:clamp(.75rem,.72rem + .15vw,.84rem);--text-sm:clamp(.875rem,.84rem + .2vw,1rem);--text-base:clamp(1rem,.97rem + .15vw,1.08rem);--text-lg:clamp(1.15rem,1.06rem + .45vw,1.42rem);--text-xl:clamp(1.55rem,1.35rem + 1vw,2.15rem);
-      --font-display:'General Sans','Helvetica Neue',sans-serif;--font-body:'Satoshi','Helvetica Neue',sans-serif;--ease:180ms cubic-bezier(.16,1,.3,1)
+    :root,
+    [data-theme="light"] {
+      --bg: #f5f4ef;
+      --surface: #fffefb;
+      --surface-2: #efede6;
+      --surface-dynamic: #e5e2d9;
+
+      --text: #252820;
+      --muted: #62675d;
+      --faint: #7d8378;
+      --inverse: #fffefb;
+
+      --primary: #146c5c;
+      --primary-hover: #0d594b;
+      --primary-soft: #dcebe5;
+
+      --success: #3b7448;
+      --success-hover: #2d6039;
+      --success-soft: #e0ece1;
+
+      --danger: #9a4938;
+      --danger-soft: #f3e2dc;
+
+      --border: color-mix(
+        in oklab,
+        var(--text) 13%,
+        transparent
+      );
+
+      --shadow-sm: 0 1px 2px rgba(39, 45, 34, 0.06);
+      --shadow-md: 0 10px 30px rgba(39, 45, 34, 0.09);
+      --shadow-lg: 0 18px 55px rgba(39, 45, 34, 0.15);
+
+      --radius-sm: 0.5rem;
+      --radius-md: 0.75rem;
+      --radius-lg: 1rem;
+      --radius-xl: 1.25rem;
+      --radius-full: 999px;
+
+      --space-1: 0.25rem;
+      --space-2: 0.5rem;
+      --space-3: 0.75rem;
+      --space-4: 1rem;
+      --space-5: 1.25rem;
+      --space-6: 1.5rem;
+      --space-8: 2rem;
+      --space-10: 2.5rem;
+      --space-12: 3rem;
+      --space-16: 4rem;
+
+      --text-xs: clamp(0.75rem, 0.72rem + 0.15vw, 0.84rem);
+      --text-sm: clamp(0.875rem, 0.84rem + 0.2vw, 1rem);
+      --text-base: clamp(1rem, 0.97rem + 0.15vw, 1.08rem);
+      --text-lg: clamp(1.15rem, 1.06rem + 0.45vw, 1.42rem);
+      --text-xl: clamp(1.55rem, 1.35rem + 1vw, 2.15rem);
+
+      --font-display: "General Sans", "Helvetica Neue", sans-serif;
+      --font-body: "Satoshi", "Helvetica Neue", sans-serif;
+
+      --ease: 180ms cubic-bezier(0.16, 1, 0.3, 1);
     }
-    [data-theme="dark"]{
-      --bg:#171a17;--surface:#20241f;--surface-2:#292e28;--surface-dynamic:#343a33;
-      --text:#eef1e9;--muted:#b8beb3;--faint:#949b90;--inverse:#12211d;
-      --primary:#79c9b4;--primary-hover:#9bdac9;--primary-soft:#273f38;
-      --success:#84cb92;--success-hover:#9adaaa;--success-soft:#293e2e;
-      --danger:#e08d79;--danger-soft:#4a302a;--border:color-mix(in oklab,var(--text) 16%,transparent);
-      --shadow-sm:0 1px 2px rgba(0,0,0,.2);--shadow-md:0 10px 30px rgba(0,0,0,.3);--shadow-lg:0 18px 55px rgba(0,0,0,.45)
+
+    [data-theme="dark"] {
+      --bg: #171a17;
+      --surface: #20241f;
+      --surface-2: #292e28;
+      --surface-dynamic: #343a33;
+
+      --text: #eef1e9;
+      --muted: #b8beb3;
+      --faint: #949b90;
+      --inverse: #12211d;
+
+      --primary: #79c9b4;
+      --primary-hover: #9bdac9;
+      --primary-soft: #273f38;
+
+      --success: #84cb92;
+      --success-hover: #9adaaa;
+      --success-soft: #293e2e;
+
+      --danger: #e08d79;
+      --danger-soft: #4a302a;
+
+      --border: color-mix(
+        in oklab,
+        var(--text) 16%,
+        transparent
+      );
+
+      --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.2);
+      --shadow-md: 0 10px 30px rgba(0, 0, 0, 0.3);
+      --shadow-lg: 0 18px 55px rgba(0, 0, 0, 0.45);
     }
-    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-    html{-webkit-text-size-adjust:none;text-size-adjust:none;-webkit-font-smoothing:antialiased;scroll-behavior:smooth}
-    body{min-height:100dvh;background:var(--bg);color:var(--text);font-family:var(--font-body);font-size:var(--text-base);line-height:1.55}
-    button,input,select,textarea{font:inherit;color:inherit}button{border:0;cursor:pointer}button:disabled{opacity:.55;cursor:not-allowed}
-    a,button,input,select,textarea{transition:color var(--ease),background var(--ease),border-color var(--ease),box-shadow var(--ease),transform var(--ease)}
-    :focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:var(--radius-sm)}
-    [hidden]{display:none!important}.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
-    .skip{position:fixed;left:var(--space-4);top:-80px;z-index:100;background:var(--text);color:var(--bg);padding:var(--space-3) var(--space-4);border-radius:var(--radius-md)}.skip:focus{top:var(--space-4)}
-    .app-shell{min-height:100dvh}.topbar{position:sticky;top:0;z-index:20;background:color-mix(in oklab,var(--bg) 88%,transparent);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
-    .topbar-inner{max-width:68rem;margin:auto;min-height:4.25rem;padding:0 var(--space-4);display:flex;align-items:center;justify-content:space-between;gap:var(--space-3)}
-    .brand{display:flex;align-items:center;gap:var(--space-3);font-family:var(--font-display);font-weight:700;font-size:var(--text-lg)}.brand-mark{width:2rem;height:2rem;color:var(--primary);flex:0 0 auto}
-    .icon-btn{width:2.75rem;height:2.75rem;display:grid;place-items:center;border-radius:var(--radius-full);background:transparent;color:var(--text)}.icon-btn:hover{background:var(--surface-2)}.icon-btn:active{transform:scale(.94)}.icon-btn svg{width:1.25rem;height:1.25rem}
-    .header-actions{display:flex;align-items:center;gap:var(--space-1)}
-    main{width:min(100%,68rem);margin-inline:auto;padding:var(--space-6) var(--space-4) calc(var(--space-16) + env(safe-area-inset-bottom))}
-    .screen{animation:screen-in 260ms cubic-bezier(.16,1,.3,1)}@keyframes screen-in{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
-    .page-head{display:flex;align-items:flex-start;justify-content:space-between;gap:var(--space-4);margin-bottom:var(--space-6)}
-    .eyebrow{font-size:var(--text-xs);font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--primary);margin-bottom:var(--space-1)}
-    h1{font-family:var(--font-display);font-size:var(--text-xl);line-height:1.14;letter-spacing:-.025em}h2{font-family:var(--font-display);font-size:var(--text-lg);line-height:1.2}p{max-width:68ch}.subtle{color:var(--muted);font-size:var(--text-sm)}
-    .summary-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--space-3);margin-bottom:var(--space-8)}
-    .summary-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-4);box-shadow:var(--shadow-sm)}
-    .summary-card.balance{grid-column:1/-1;background:var(--text);color:var(--bg);border-color:transparent}.summary-label{font-size:var(--text-xs);color:var(--muted);font-weight:700}.balance .summary-label{color:color-mix(in oklab,var(--bg) 70%,transparent)}.summary-value{margin-top:var(--space-2);font-size:var(--text-lg);font-weight:700;font-variant-numeric:tabular-nums}.income-text{color:var(--success)}.expense-text{color:var(--danger)}
-    .section-head{display:flex;justify-content:space-between;align-items:end;gap:var(--space-3);margin-bottom:var(--space-3)}
-    .ledger-list{list-style:none;display:grid;gap:var(--space-2)}
-    .ledger-button{width:100%;text-align:left;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-4);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:var(--space-3);align-items:center;box-shadow:var(--shadow-sm)}.ledger-button:hover{transform:translateY(-2px);box-shadow:var(--shadow-md);border-color:color-mix(in oklab,var(--primary) 32%,var(--border))}.ledger-button:active{transform:translateY(0) scale(.995)}
-    .item-title{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.item-meta{display:flex;align-items:center;gap:var(--space-2);margin-top:var(--space-1);font-size:var(--text-xs);color:var(--muted)}.dot{width:.3rem;height:.3rem;border-radius:50%;background:var(--faint)}.item-amount{text-align:right;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}.item-date{text-align:right;font-size:var(--text-xs);color:var(--muted);margin-top:var(--space-1)}
-    .fab{position:fixed;right:max(var(--space-5),calc((100vw - 68rem)/2 + var(--space-5)));bottom:calc(var(--space-5) + env(safe-area-inset-bottom));z-index:15;width:3.7rem;height:3.7rem;display:grid;place-items:center;border-radius:var(--radius-full);background:var(--primary);color:var(--inverse);box-shadow:var(--shadow-lg)}.fab:hover{background:var(--primary-hover);transform:translateY(-3px)}.fab:active{transform:scale(.94)}.fab svg{width:1.55rem;height:1.55rem}
-    .detail-layout{display:grid;gap:var(--space-4)}.detail-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-5);box-shadow:var(--shadow-sm)}
-    .amount-hero{padding:var(--space-8) var(--space-5);background:var(--text);color:var(--bg)}.amount-hero .subtle{color:color-mix(in oklab,var(--bg) 70%,transparent)}.amount-large{font-size:clamp(2rem,8vw,3.2rem);font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums;margin-top:var(--space-2)}
-    .detail-grid{display:grid}.detail-row{padding:var(--space-4) 0;border-bottom:1px solid var(--border);display:grid;grid-template-columns:7rem minmax(0,1fr);gap:var(--space-4)}.detail-row:last-child{border-bottom:0}.detail-term{color:var(--muted);font-size:var(--text-sm)}.detail-value{font-weight:500;overflow-wrap:anywhere;white-space:pre-wrap}
-    .form-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-5);box-shadow:var(--shadow-sm)}.form-grid{display:grid;gap:var(--space-5)}.field{display:grid;gap:var(--space-2)}label,legend{font-size:var(--text-sm);font-weight:700}.required{color:var(--danger)}
-    input,select,textarea{width:100%;min-height:3rem;padding:var(--space-3) var(--space-4);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg)}input:hover,select:hover,textarea:hover{border-color:color-mix(in oklab,var(--text) 28%,transparent)}input:focus,select:focus,textarea:focus{outline:0;border-color:var(--primary);box-shadow:0 0 0 3px color-mix(in oklab,var(--primary) 17%,transparent)}textarea{min-height:8rem;resize:vertical}.field-error{font-size:var(--text-xs);color:var(--danger)}
-    fieldset{border:0}.segment{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2);margin-top:var(--space-2)}.segment input{position:absolute;opacity:0;pointer-events:none}.segment label{min-height:3rem;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg);cursor:pointer}.segment input:checked+label{background:var(--primary-soft);border-color:var(--primary);color:var(--primary)}.segment input:focus-visible+label{outline:2px solid var(--primary);outline-offset:3px}
-    .form-actions{position:sticky;bottom:0;z-index:10;margin:var(--space-6) calc(var(--space-4)*-1) calc((var(--space-16) + env(safe-area-inset-bottom))*-1);padding:var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));background:color-mix(in oklab,var(--bg) 91%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)}
-    .btn{min-height:3rem;padding:var(--space-3) var(--space-5);border-radius:var(--radius-md);font-weight:700;font-size:var(--text-sm);display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2)}.btn-primary{background:var(--success);color:#fff}.btn-primary:hover{background:var(--success-hover)}.btn-secondary{background:var(--surface);border:1px solid var(--border)}.btn-secondary:hover{background:var(--surface-2)}.btn-danger{background:var(--danger);color:#fff}.btn:active{transform:scale(.98)}
-    .login-wrap{min-height:calc(100dvh - 4.25rem);display:grid;place-items:center;padding:var(--space-6) 0}.login-card{width:min(100%,27rem);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:clamp(var(--space-5),6vw,var(--space-8));box-shadow:var(--shadow-md)}.login-mark{width:3rem;height:3rem;color:var(--primary);margin-bottom:var(--space-5)}.login-card h1{margin-bottom:var(--space-2)}.login-form{display:grid;gap:var(--space-4);margin-top:var(--space-6)}.login-status{min-height:1.5rem;color:var(--danger);font-size:var(--text-sm)}.google-signin{display:flex;justify-content:center;min-height:44px;margin-top:var(--space-6)}.login-help{margin-top:var(--space-4);text-align:center}.demo-note{margin-top:var(--space-5);padding:var(--space-3);border-radius:var(--radius-md);background:var(--primary-soft);color:var(--primary);font-size:var(--text-xs)}
-    .empty-state{text-align:center;background:var(--surface);border:1px dashed var(--border);border-radius:var(--radius-xl);padding:var(--space-12) var(--space-5);color:var(--muted)}.empty-state svg{width:2.2rem;height:2.2rem;margin:0 auto var(--space-4);color:var(--primary)}.empty-state h2{color:var(--text);margin-bottom:var(--space-2)}
-    .skeleton{height:5.2rem;border-radius:var(--radius-lg);background:linear-gradient(90deg,var(--surface-2) 25%,var(--surface-dynamic) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}@keyframes shimmer{to{background-position:-200% 0}}
-    dialog{width:min(calc(100% - 2rem),34rem);max-height:min(84dvh,45rem);margin:auto;border:1px solid var(--border);border-radius:var(--radius-xl);background:var(--surface);color:var(--text);box-shadow:var(--shadow-lg);padding:0;overflow:hidden}dialog::backdrop{background:rgba(18,23,18,.54);backdrop-filter:blur(3px)}.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);padding:var(--space-5);border-bottom:1px solid var(--border)}.dialog-body{padding:var(--space-5);overflow:auto;max-height:56dvh}.dialog-actions{display:flex;justify-content:flex-end;gap:var(--space-3);padding:var(--space-4) var(--space-5);border-top:1px solid var(--border);background:var(--bg)}.confirm-list{display:grid;margin-top:var(--space-4)}.confirm-row{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--border)}.confirm-row:last-child{border-bottom:0}.confirm-row dt{color:var(--muted);font-size:var(--text-sm)}.confirm-row dd{font-weight:500;overflow-wrap:anywhere;white-space:pre-wrap}
-    .status-banner{position:fixed;left:50%;bottom:calc(var(--space-5) + env(safe-area-inset-bottom));z-index:40;transform:translate(-50%,1rem);opacity:0;pointer-events:none;background:var(--text);color:var(--bg);padding:var(--space-3) var(--space-5);border-radius:var(--radius-full);box-shadow:var(--shadow-lg);font-size:var(--text-sm);transition:opacity var(--ease),transform var(--ease)}.status-banner.show{opacity:1;transform:translate(-50%,0)}
-    @media(min-width:45rem){.topbar-inner,main{padding-left:var(--space-8);padding-right:var(--space-8)}main{padding-top:var(--space-8)}.summary-grid{grid-template-columns:1.35fr 1fr 1fr}.summary-card.balance{grid-column:auto}.detail-layout{grid-template-columns:minmax(17rem,.8fr) minmax(0,1.2fr);align-items:start}.amount-hero{position:sticky;top:6.25rem}.form-card{padding:var(--space-8)}.form-grid{grid-template-columns:1fr 1fr}.field.full,fieldset.full{grid-column:1/-1}.form-actions{position:static;margin:var(--space-6) 0 0;padding:0;border:0;background:transparent;backdrop-filter:none;max-width:26rem}.ledger-button{padding:var(--space-5)}}
-    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;scroll-behavior:auto!important;transition-duration:.01ms!important}}
-    @media(hover:none){.ledger-button:hover,.fab:hover{transform:none}}
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      -webkit-text-size-adjust: none;
+      text-size-adjust: none;
+      -webkit-font-smoothing: antialiased;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100dvh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: var(--text-base);
+      line-height: 1.55;
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+      color: inherit;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.55;
+      cursor: not-allowed;
+    }
+
+    a,
+    button,
+    input,
+    select,
+    textarea {
+      transition:
+        color var(--ease),
+        background var(--ease),
+        border-color var(--ease),
+        box-shadow var(--ease),
+        transform var(--ease);
+    }
+
+    :focus-visible {
+      outline: 2px solid var(--primary);
+      outline-offset: 3px;
+      border-radius: var(--radius-sm);
+    }
+
+    [hidden] {
+      display: none !important;
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    .skip {
+      position: fixed;
+      left: var(--space-4);
+      top: -80px;
+      z-index: 100;
+      background: var(--text);
+      color: var(--bg);
+      padding: var(--space-3) var(--space-4);
+      border-radius: var(--radius-md);
+    }
+
+    .skip:focus {
+      top: var(--space-4);
+    }
+
+    .app-shell {
+      min-height: 100dvh;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      background: color-mix(
+        in oklab,
+        var(--bg) 88%,
+        transparent
+      );
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .topbar-inner {
+      max-width: 68rem;
+      min-height: 4.25rem;
+      margin: auto;
+      padding: 0 var(--space-4);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: var(--space-3);
+      font-family: var(--font-display);
+      font-weight: 700;
+      font-size: var(--text-lg);
+    }
+
+    .brand-mark {
+      width: 2rem;
+      height: 2rem;
+      color: var(--primary);
+      flex: 0 0 auto;
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: var(--space-1);
+    }
+
+    .icon-btn {
+      width: 2.75rem;
+      height: 2.75rem;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius-full);
+      background: transparent;
+      color: var(--text);
+    }
+
+    .icon-btn:hover {
+      background: var(--surface-2);
+    }
+
+    .icon-btn:active {
+      transform: scale(0.94);
+    }
+
+    .icon-btn svg {
+      width: 1.25rem;
+      height: 1.25rem;
+    }
+
+    main {
+      width: min(100%, 68rem);
+      margin-inline: auto;
+      padding:
+        var(--space-6)
+        var(--space-4)
+        calc(var(--space-16) + env(safe-area-inset-bottom));
+    }
+
+    .screen {
+      animation: screen-in 260ms cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes screen-in {
+      from {
+        opacity: 0;
+        transform: translateY(7px);
+      }
+
+      to {
+        opacity: 1;
+        transform: none;
+      }
+    }
+
+    .page-head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: var(--space-4);
+      margin-bottom: var(--space-6);
+    }
+
+    .eyebrow {
+      margin-bottom: var(--space-1);
+      color: var(--primary);
+      font-size: var(--text-xs);
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: var(--text-xl);
+      line-height: 1.14;
+      letter-spacing: -0.025em;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: var(--text-lg);
+      line-height: 1.2;
+    }
+
+    p {
+      max-width: 68ch;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: var(--text-sm);
+    }
+
+    .month-navigation {
+      width: min(100%, 22rem);
+      display: grid;
+      grid-template-columns: 2.75rem minmax(9rem, 1fr) 2.75rem;
+      align-items: center;
+      gap: var(--space-2);
+      margin-top: var(--space-3);
+    }
+
+    .month-navigation .icon-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .month-navigation .icon-btn:hover {
+      background: var(--surface-2);
+      border-color: color-mix(
+        in oklab,
+        var(--primary) 35%,
+        var(--border)
+      );
+    }
+
+    .month-label {
+      text-align: center;
+      color: var(--text);
+      font-weight: 700;
+      font-size: var(--text-sm);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .summary-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: var(--space-3);
+      margin-bottom: var(--space-8);
+    }
+
+    .summary-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .summary-card.balance {
+      grid-column: 1 / -1;
+      background: var(--text);
+      color: var(--bg);
+      border-color: transparent;
+    }
+
+    .summary-label {
+      color: var(--muted);
+      font-size: var(--text-xs);
+      font-weight: 700;
+    }
+
+    .balance .summary-label {
+      color: color-mix(
+        in oklab,
+        var(--bg) 70%,
+        transparent
+      );
+    }
+
+    .summary-value {
+      margin-top: var(--space-2);
+      font-size: var(--text-lg);
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .income-text {
+      color: var(--success);
+    }
+
+    .expense-text {
+      color: var(--danger);
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: end;
+      gap: var(--space-3);
+      margin-bottom: var(--space-3);
+    }
+
+    .ledger-list {
+      list-style: none;
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    .ledger-list > li {
+      list-style: none;
+    }
+
+    .ledger-list > li::marker {
+      content: "";
+    }
+
+    .ledger-button {
+      width: 100%;
+      text-align: left;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-4);
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: var(--space-3);
+      align-items: center;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .ledger-button:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: color-mix(
+        in oklab,
+        var(--primary) 32%,
+        var(--border)
+      );
+    }
+
+    .ledger-button:active {
+      transform: translateY(0) scale(0.995);
+    }
+
+    .item-title {
+      display: block;
+      font-weight: 700;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .item-meta {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      margin-top: var(--space-1);
+      color: var(--muted);
+      font-size: var(--text-xs);
+    }
+
+    .dot {
+      width: 0.3rem;
+      height: 0.3rem;
+      border-radius: 50%;
+      background: var(--faint);
+    }
+
+    .item-side {
+      min-width: max-content;
+    }
+
+    .item-amount {
+      display: block;
+      text-align: right;
+      font-weight: 700;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+    }
+
+    .item-date {
+      display: block;
+      text-align: right;
+      margin-top: var(--space-1);
+      color: var(--muted);
+      font-size: var(--text-xs);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .fab {
+      position: fixed;
+      right: max(
+        var(--space-5),
+        calc((100vw - 68rem) / 2 + var(--space-5))
+      );
+      bottom: calc(
+        var(--space-5) + env(safe-area-inset-bottom)
+      );
+      z-index: 15;
+      width: 3.7rem;
+      height: 3.7rem;
+      display: grid;
+      place-items: center;
+      border-radius: var(--radius-full);
+      background: var(--primary);
+      color: var(--inverse);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .fab:hover {
+      background: var(--primary-hover);
+      transform: translateY(-3px);
+    }
+
+    .fab:active {
+      transform: scale(0.94);
+    }
+
+    .fab svg {
+      width: 1.55rem;
+      height: 1.55rem;
+    }
+
+    .detail-layout {
+      display: grid;
+      gap: var(--space-4);
+    }
+
+    .detail-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .amount-hero {
+      padding: var(--space-8) var(--space-5);
+      background: var(--text);
+      color: var(--bg);
+    }
+
+    .amount-hero .subtle {
+      color: color-mix(
+        in oklab,
+        var(--bg) 70%,
+        transparent
+      );
+    }
+
+    .amount-large {
+      margin-top: var(--space-2);
+      font-size: clamp(2rem, 8vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .detail-grid {
+      display: grid;
+    }
+
+    .detail-row {
+      padding: var(--space-4) 0;
+      border-bottom: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 7rem minmax(0, 1fr);
+      gap: var(--space-4);
+    }
+
+    .detail-row:last-child {
+      border-bottom: 0;
+    }
+
+    .detail-term {
+      color: var(--muted);
+      font-size: var(--text-sm);
+    }
+
+    .detail-value {
+      font-weight: 500;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .form-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-5);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .form-grid {
+      display: grid;
+      gap: var(--space-5);
+    }
+
+    .field {
+      display: grid;
+      gap: var(--space-2);
+    }
+
+    label,
+    legend {
+      font-size: var(--text-sm);
+      font-weight: 700;
+    }
+
+    .required {
+      color: var(--danger);
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      min-height: 3rem;
+      padding: var(--space-3) var(--space-4);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg);
+    }
+
+    input:hover,
+    select:hover,
+    textarea:hover {
+      border-color: color-mix(
+        in oklab,
+        var(--text) 28%,
+        transparent
+      );
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      outline: 0;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px color-mix(
+        in oklab,
+        var(--primary) 17%,
+        transparent
+      );
+    }
+
+    textarea {
+      min-height: 8rem;
+      resize: vertical;
+    }
+
+    .field-error {
+      color: var(--danger);
+      font-size: var(--text-xs);
+    }
+
+    fieldset {
+      border: 0;
+    }
+
+    .segment {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-2);
+      margin-top: var(--space-2);
+    }
+
+    .segment input {
+      position: absolute;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .segment label {
+      min-height: 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--bg);
+      cursor: pointer;
+    }
+
+    .segment input:checked + label {
+      background: var(--primary-soft);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .segment input:focus-visible + label {
+      outline: 2px solid var(--primary);
+      outline-offset: 3px;
+    }
+
+    .form-actions {
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
+      margin:
+        var(--space-6)
+        calc(var(--space-4) * -1)
+        calc(
+          (var(--space-16) + env(safe-area-inset-bottom)) * -1
+        );
+      padding:
+        var(--space-3)
+        var(--space-4)
+        calc(var(--space-3) + env(safe-area-inset-bottom));
+      background: color-mix(
+        in oklab,
+        var(--bg) 91%,
+        transparent
+      );
+      backdrop-filter: blur(16px);
+      border-top: 1px solid var(--border);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: var(--space-3);
+    }
+
+    .btn {
+      min-height: 3rem;
+      padding: var(--space-3) var(--space-5);
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: var(--text-sm);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-2);
+    }
+
+    .btn-primary {
+      background: var(--success);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: var(--success-hover);
+    }
+
+    .btn-secondary {
+      background: var(--surface);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: var(--surface-2);
+    }
+
+    .btn-danger {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .login-wrap {
+      min-height: calc(100dvh - 4.25rem);
+      display: grid;
+      place-items: center;
+      padding: var(--space-6) 0;
+    }
+
+    .login-card {
+      width: min(100%, 27rem);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      padding: clamp(
+        var(--space-5),
+        6vw,
+        var(--space-8)
+      );
+      box-shadow: var(--shadow-md);
+    }
+
+    .login-mark {
+      width: 3rem;
+      height: 3rem;
+      color: var(--primary);
+      margin-bottom: var(--space-5);
+    }
+
+    .login-card h1 {
+      margin-bottom: var(--space-2);
+    }
+
+    .google-signin {
+      display: flex;
+      justify-content: center;
+      min-height: 44px;
+      margin-top: var(--space-6);
+    }
+
+    .login-status {
+      min-height: 1.5rem;
+      color: var(--danger);
+      font-size: var(--text-sm);
+    }
+
+    .login-help {
+      margin-top: var(--space-4);
+      text-align: center;
+    }
+
+    .empty-state {
+      text-align: center;
+      background: var(--surface);
+      border: 1px dashed var(--border);
+      border-radius: var(--radius-xl);
+      padding: var(--space-12) var(--space-5);
+      color: var(--muted);
+    }
+
+    .empty-state svg {
+      width: 2.2rem;
+      height: 2.2rem;
+      margin: 0 auto var(--space-4);
+      color: var(--primary);
+    }
+
+    .empty-state h2 {
+      color: var(--text);
+      margin-bottom: var(--space-2);
+    }
+
+    .skeleton {
+      height: 5.2rem;
+      border-radius: var(--radius-lg);
+      background: linear-gradient(
+        90deg,
+        var(--surface-2) 25%,
+        var(--surface-dynamic) 50%,
+        var(--surface-2) 75%
+      );
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+    }
+
+    @keyframes shimmer {
+      to {
+        background-position: -200% 0;
+      }
+    }
+
+    dialog {
+      width: min(calc(100% - 2rem), 34rem);
+      max-height: min(84dvh, 45rem);
+      margin: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-xl);
+      background: var(--surface);
+      color: var(--text);
+      box-shadow: var(--shadow-lg);
+      padding: 0;
+      overflow: hidden;
+    }
+
+    dialog::backdrop {
+      background: rgba(18, 23, 18, 0.54);
+      backdrop-filter: blur(3px);
+    }
+
+    .dialog-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      padding: var(--space-5);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .dialog-body {
+      padding: var(--space-5);
+      overflow: auto;
+      max-height: 56dvh;
+    }
+
+    .dialog-actions {
+      display: flex;
+      justify-content: flex-end;
+      gap: var(--space-3);
+      padding: var(--space-4) var(--space-5);
+      border-top: 1px solid var(--border);
+      background: var(--bg);
+    }
+
+    .confirm-list {
+      display: grid;
+      margin-top: var(--space-4);
+    }
+
+    .confirm-row {
+      display: grid;
+      grid-template-columns: 6rem minmax(0, 1fr);
+      gap: var(--space-3);
+      padding: var(--space-3) 0;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .confirm-row:last-child {
+      border-bottom: 0;
+    }
+
+    .confirm-row dt {
+      color: var(--muted);
+      font-size: var(--text-sm);
+    }
+
+    .confirm-row dd {
+      font-weight: 500;
+      overflow-wrap: anywhere;
+      white-space: pre-wrap;
+    }
+
+    .status-banner {
+      position: fixed;
+      left: 50%;
+      bottom: calc(
+        var(--space-5) + env(safe-area-inset-bottom)
+      );
+      z-index: 40;
+      transform: translate(-50%, 1rem);
+      opacity: 0;
+      pointer-events: none;
+      background: var(--text);
+      color: var(--bg);
+      padding: var(--space-3) var(--space-5);
+      border-radius: var(--radius-full);
+      box-shadow: var(--shadow-lg);
+      font-size: var(--text-sm);
+      transition:
+        opacity var(--ease),
+        transform var(--ease);
+    }
+
+    .status-banner.show {
+      opacity: 1;
+      transform: translate(-50%, 0);
+    }
+
+    @media (min-width: 45rem) {
+      .topbar-inner,
+      main {
+        padding-left: var(--space-8);
+        padding-right: var(--space-8);
+      }
+
+      main {
+        padding-top: var(--space-8);
+      }
+
+      .summary-grid {
+        grid-template-columns: 1.35fr 1fr 1fr;
+      }
+
+      .summary-card.balance {
+        grid-column: auto;
+      }
+
+      .detail-layout {
+        grid-template-columns:
+          minmax(17rem, 0.8fr)
+          minmax(0, 1.2fr);
+        align-items: start;
+      }
+
+      .amount-hero {
+        position: sticky;
+        top: 6.25rem;
+      }
+
+      .form-card {
+        padding: var(--space-8);
+      }
+
+      .form-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .field.full,
+      fieldset.full {
+        grid-column: 1 / -1;
+      }
+
+      .form-actions {
+        position: static;
+        margin: var(--space-6) 0 0;
+        padding: 0;
+        border: 0;
+        background: transparent;
+        backdrop-filter: none;
+        max-width: 26rem;
+      }
+
+      .ledger-button {
+        padding: var(--space-5);
+      }
+    }
+
+    @media (max-width: 32rem) {
+      .ledger-button {
+        grid-template-columns: minmax(0, 1fr);
+      }
+
+      .item-side {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: var(--space-3);
+      }
+
+      .item-date {
+        margin-top: 0;
+      }
+
+      .month-navigation {
+        width: 100%;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    @media (hover: none) {
+      .ledger-button:hover,
+      .fab:hover {
+        transform: none;
+      }
+    }
   </style>
 </head>
+
 <body>
   <a class="skip" href="#main-content">跳到主要內容</a>
+
   <div class="app-shell">
     <header class="topbar">
       <div class="topbar-inner">
         <div class="brand" aria-label="店面記帳簿">
-          <svg class="brand-mark" viewBox="0 0 32 32" fill="none" aria-hidden="true"><path d="M7 5.5h15.5A2.5 2.5 0 0 1 25 8v18H9a2 2 0 0 1-2-2V5.5Z" stroke="currentColor" stroke-width="2"/><path d="M10 10h11M10 15h11M10 20h6M7 24c0-1.1.9-2 2-2h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+          <svg
+            class="brand-mark"
+            viewBox="0 0 32 32"
+            fill="none"
+            aria-hidden="true"
+          >
+            <path
+              d="M7 5.5h15.5A2.5 2.5 0 0 1 25 8v18H9a2 2 0 0 1-2-2V5.5Z"
+              stroke="currentColor"
+              stroke-width="2"
+            />
+            <path
+              d="M10 10h11M10 15h11M10 20h6M7 24c0-1.1.9-2 2-2h16"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+            />
+          </svg>
+
           <span>店面記帳簿</span>
         </div>
+
         <div class="header-actions">
-          <button id="theme-toggle" class="icon-btn" type="button" aria-label="切換深色模式" title="切換顯示模式"><i data-lucide="moon"></i></button>
-          <button id="logout-button" class="icon-btn" type="button" aria-label="登出" title="登出" hidden><i data-lucide="log-out"></i></button>
+          <button
+            id="theme-toggle"
+            class="icon-btn"
+            type="button"
+            aria-label="切換深色模式"
+            title="切換顯示模式"
+          >
+            <i data-lucide="moon"></i>
+          </button>
+
+          <button
+            id="logout-button"
+            class="icon-btn"
+            type="button"
+            aria-label="登出"
+            title="登出"
+            hidden
+          >
+            <i data-lucide="log-out"></i>
+          </button>
         </div>
       </div>
     </header>
 
     <main id="main-content">
-      <section id="login-screen" class="screen" aria-labelledby="login-title">
-        <div class="login-wrap"><div class="login-card">
-          <svg class="login-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="10" y="21" width="28" height="21" rx="6" stroke="currentColor" stroke-width="3"/><path d="M17 21v-5a7 7 0 0 1 14 0v5M24 29v6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
-          <p class="eyebrow">僅限授權帳號使用</p><h1 id="login-title">登入記帳簿</h1><p class="subtle">請使用已授權的 Google 帳號登入，才能查看與編輯帳目。</p>
-          <div id="google-signin-button" class="google-signin" aria-label="使用 Google 帳號登入"></div>
-          <p id="login-status" class="login-status login-help" role="status" aria-live="polite"></p>
-        </div></div>
+      <section
+        id="login-screen"
+        class="screen"
+        aria-labelledby="login-title"
+      >
+        <div class="login-wrap">
+          <div class="login-card">
+            <svg
+              class="login-mark"
+              viewBox="0 0 48 48"
+              fill="none"
+              aria-hidden="true"
+            >
+              <rect
+                x="10"
+                y="21"
+                width="28"
+                height="21"
+                rx="6"
+                stroke="currentColor"
+                stroke-width="3"
+              />
+              <path
+                d="M17 21v-5a7 7 0 0 1 14 0v5M24 29v6"
+                stroke="currentColor"
+                stroke-width="3"
+                stroke-linecap="round"
+              />
+            </svg>
+
+            <p class="eyebrow">僅限授權帳號使用</p>
+            <h1 id="login-title">登入記帳簿</h1>
+
+            <p class="subtle">
+              請使用已授權的 Google 帳號登入，才能查看與編輯帳目。
+            </p>
+
+            <div
+              id="google-signin-button"
+              class="google-signin"
+              aria-label="使用 Google 帳號登入"
+            ></div>
+
+            <p
+              id="login-status"
+              class="login-status login-help"
+              role="status"
+              aria-live="polite"
+            ></p>
+          </div>
+        </div>
       </section>
 
-      <section id="home-screen" class="screen" aria-labelledby="home-title" hidden>
-        <div class="page-head"><div><p class="eyebrow">帳務概覽</p><h1 id="home-title">近期項目</h1><p class="subtle" id="home-subtitle">讀取最新紀錄中</p></div></div>
-        <div id="summary-grid" class="summary-grid" aria-label="本月收支摘要"></div>
-        <div class="section-head"><h2>最近加入</h2><span class="subtle" id="item-count"></span></div>
-        <div id="list-loading" class="ledger-list" aria-label="載入中"><div class="skeleton"></div><div class="skeleton"></div><div class="skeleton"></div></div>
-        <ul id="ledger-list" class="ledger-list" aria-label="近期記帳項目" hidden></ul>
-        <div id="empty-state" class="empty-state" hidden><i data-lucide="notebook-pen"></i><h2>還沒有任何項目</h2><p>按右下角的加號，新增你的第一筆收入或支出。</p></div>
-        <button id="add-button" class="fab" type="button" aria-label="新增記帳項目" title="新增項目"><i data-lucide="plus"></i></button>
+      <section
+        id="home-screen"
+        class="screen"
+        aria-labelledby="home-title"
+        hidden
+      >
+        <div class="page-head">
+          <div>
+            <p class="eyebrow">帳務概覽</p>
+            <h1 id="home-title">每月帳目</h1>
+
+            <nav
+              class="month-navigation"
+              aria-label="切換帳目月份"
+            >
+              <button
+                id="previous-month"
+                class="icon-btn"
+                type="button"
+                aria-label="查看上個月"
+                title="上個月"
+              >
+                <i data-lucide="chevron-left"></i>
+              </button>
+
+              <p
+                id="home-subtitle"
+                class="month-label"
+                aria-live="polite"
+              >
+                讀取最新紀錄中
+              </p>
+
+              <button
+                id="next-month"
+                class="icon-btn"
+                type="button"
+                aria-label="查看下個月"
+                title="下個月"
+              >
+                <i data-lucide="chevron-right"></i>
+              </button>
+            </nav>
+          </div>
+        </div>
+
+        <div
+          id="summary-grid"
+          class="summary-grid"
+          aria-label="所選月份收支摘要"
+        ></div>
+
+        <div class="section-head">
+          <h2>當月明細</h2>
+          <span class="subtle" id="item-count"></span>
+        </div>
+
+        <div
+          id="list-loading"
+          class="ledger-list"
+          aria-label="載入中"
+        >
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+          <div class="skeleton"></div>
+        </div>
+
+        <ul
+          id="ledger-list"
+          class="ledger-list"
+          aria-label="所選月份記帳項目"
+          hidden
+        ></ul>
+
+        <div id="empty-state" class="empty-state" hidden></div>
+
+        <button
+          id="add-button"
+          class="fab"
+          type="button"
+          aria-label="新增記帳項目"
+          title="新增項目"
+        >
+          <i data-lucide="plus"></i>
+        </button>
       </section>
 
-      <section id="detail-screen" class="screen" aria-labelledby="detail-title" hidden>
-        <div class="page-head"><div style="display:flex;align-items:flex-start;gap:var(--space-3)"><button id="detail-back" class="icon-btn" type="button" aria-label="回到主頁"><i data-lucide="arrow-left"></i></button><div><p class="eyebrow">項目內容</p><h1 id="detail-title">項目詳細資料</h1></div></div></div>
+      <section
+        id="detail-screen"
+        class="screen"
+        aria-labelledby="detail-title"
+        hidden
+      >
+        <div class="page-head">
+          <div
+            style="
+              display: flex;
+              align-items: flex-start;
+              gap: var(--space-3);
+            "
+          >
+            <button
+              id="detail-back"
+              class="icon-btn"
+              type="button"
+              aria-label="回到主頁"
+            >
+              <i data-lucide="arrow-left"></i>
+            </button>
+
+            <div>
+              <p class="eyebrow">項目內容</p>
+              <h1 id="detail-title">項目詳細資料</h1>
+            </div>
+          </div>
+        </div>
+
         <div id="detail-content" class="detail-layout"></div>
-        <button id="edit-button" class="fab" type="button" aria-label="修改這筆項目" title="修改項目"><i data-lucide="pencil"></i></button>
+
+        <button
+          id="edit-button"
+          class="fab"
+          type="button"
+          aria-label="修改這筆項目"
+          title="修改項目"
+        >
+          <i data-lucide="pencil"></i>
+        </button>
       </section>
 
-      <section id="form-screen" class="screen" aria-labelledby="form-title" hidden>
-        <div class="page-head"><div style="display:flex;align-items:flex-start;gap:var(--space-3)"><button id="form-back" class="icon-btn" type="button" aria-label="取消並返回"><i data-lucide="arrow-left"></i></button><div><p id="form-eyebrow" class="eyebrow">新增資料</p><h1 id="form-title">新增項目</h1><p class="subtle">確認內容後，再儲存到 Google Sheet。</p></div></div></div>
+      <section
+        id="form-screen"
+        class="screen"
+        aria-labelledby="form-title"
+        hidden
+      >
+        <div class="page-head">
+          <div
+            style="
+              display: flex;
+              align-items: flex-start;
+              gap: var(--space-3);
+            "
+          >
+            <button
+              id="form-back"
+              class="icon-btn"
+              type="button"
+              aria-label="取消並返回"
+            >
+              <i data-lucide="arrow-left"></i>
+            </button>
+
+            <div>
+              <p id="form-eyebrow" class="eyebrow">
+                新增資料
+              </p>
+
+              <h1 id="form-title">新增項目</h1>
+
+              <p class="subtle">
+                確認內容後，再儲存到 Google Sheet。
+              </p>
+            </div>
+          </div>
+        </div>
+
         <form id="entry-form" novalidate>
-          <div class="form-card"><div class="form-grid">
-            <div class="field"><label for="entry-date">日期 <span class="required" aria-hidden="true">*</span></label><input id="entry-date" name="date" type="date" required><span class="field-error" data-error-for="date"></span></div>
-            <div class="field"><label for="entry-category">類別 <span class="required" aria-hidden="true">*</span></label><input id="entry-category" name="category" list="category-list" placeholder="例如：進貨、房租" required><datalist id="category-list"><option value="營業收入"><option value="進貨"><option value="房租"><option value="水電"><option value="薪資"><option value="設備"><option value="其他"></datalist><span class="field-error" data-error-for="category"></span></div>
-            <div class="field full"><label for="entry-description">項目說明 <span class="required" aria-hidden="true">*</span></label><input id="entry-description" name="description" type="text" maxlength="100" placeholder="例如：市場食材採購" required><span class="field-error" data-error-for="description"></span></div>
-            <fieldset class="full"><legend>收支類型 <span class="required" aria-hidden="true">*</span></legend><div class="segment"><input id="type-expense" name="type" type="radio" value="支出"><label for="type-expense">支出</label><input id="type-income" name="type" type="radio" value="收入"><label for="type-income">收入</label></div><span class="field-error" data-error-for="type"></span></fieldset>
-            <div class="field full"><label for="entry-amount">金額 <span class="required" aria-hidden="true">*</span></label><input id="entry-amount" name="amount" type="number" inputmode="decimal" min="0" step="1" placeholder="0" required><span class="field-error" data-error-for="amount"></span></div>
-            <div class="field full"><label for="entry-note">備註</label><textarea id="entry-note" name="note" maxlength="500" placeholder="可留空；例如：現金付款、發票號碼"></textarea><span class="subtle">最多 500 個字</span></div>
-          </div></div>
-          <div class="form-actions"><button id="submit-entry" class="btn btn-primary" type="submit">確認</button><button id="cancel-entry" class="btn btn-secondary" type="button">取消</button></div>
+          <div class="form-card">
+            <div class="form-grid">
+              <div class="field">
+                <label for="entry-date">
+                  日期
+                  <span class="required" aria-hidden="true">*</span>
+                </label>
+
+                <input
+                  id="entry-date"
+                  name="date"
+                  type="date"
+                  required
+                >
+
+                <span
+                  class="field-error"
+                  data-error-for="date"
+                ></span>
+              </div>
+
+              <div class="field">
+                <label for="entry-category">
+                  類別
+                  <span class="required" aria-hidden="true">*</span>
+                </label>
+
+                <input
+                  id="entry-category"
+                  name="category"
+                  list="category-list"
+                  placeholder="例如：進貨、房租"
+                  required
+                >
+
+                <datalist id="category-list">
+                  <option value="營業收入"></option>
+                  <option value="進貨"></option>
+                  <option value="房租"></option>
+                  <option value="水電"></option>
+                  <option value="薪資"></option>
+                  <option value="設備"></option>
+                  <option value="其他"></option>
+                </datalist>
+
+                <span
+                  class="field-error"
+                  data-error-for="category"
+                ></span>
+              </div>
+
+              <div class="field full">
+                <label for="entry-description">
+                  項目說明
+                  <span class="required" aria-hidden="true">*</span>
+                </label>
+
+                <input
+                  id="entry-description"
+                  name="description"
+                  type="text"
+                  maxlength="100"
+                  placeholder="例如：市場食材採購"
+                  required
+                >
+
+                <span
+                  class="field-error"
+                  data-error-for="description"
+                ></span>
+              </div>
+
+              <fieldset class="full">
+                <legend>
+                  收支類型
+                  <span class="required" aria-hidden="true">*</span>
+                </legend>
+
+                <div class="segment">
+                  <input
+                    id="type-expense"
+                    name="type"
+                    type="radio"
+                    value="支出"
+                  >
+                  <label for="type-expense">支出</label>
+
+                  <input
+                    id="type-income"
+                    name="type"
+                    type="radio"
+                    value="收入"
+                  >
+                  <label for="type-income">收入</label>
+                </div>
+
+                <span
+                  class="field-error"
+                  data-error-for="type"
+                ></span>
+              </fieldset>
+
+              <div class="field full">
+                <label for="entry-amount">
+                  金額
+                  <span class="required" aria-hidden="true">*</span>
+                </label>
+
+                <input
+                  id="entry-amount"
+                  name="amount"
+                  type="number"
+                  inputmode="decimal"
+                  min="1"
+                  step="1"
+                  placeholder="0"
+                  required
+                >
+
+                <span
+                  class="field-error"
+                  data-error-for="amount"
+                ></span>
+              </div>
+
+              <div class="field full">
+                <label for="entry-note">備註</label>
+
+                <textarea
+                  id="entry-note"
+                  name="note"
+                  maxlength="500"
+                  placeholder="可留空；例如：現金付款、發票號碼"
+                ></textarea>
+
+                <span class="subtle">最多 500 個字</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button
+              id="submit-entry"
+              class="btn btn-primary"
+              type="submit"
+            >
+              確認
+            </button>
+
+            <button
+              id="cancel-entry"
+              class="btn btn-secondary"
+              type="button"
+            >
+              取消
+            </button>
+          </div>
         </form>
       </section>
     </main>
   </div>
 
-  <dialog id="confirm-dialog" aria-labelledby="confirm-title"><div class="dialog-head"><h2 id="confirm-title">確認儲存內容</h2><button class="icon-btn" type="button" data-close-dialog aria-label="關閉確認視窗"><i data-lucide="x"></i></button></div><div class="dialog-body"><p class="subtle">請確認每一項資料，送出後將更新 Google Sheet。</p><dl id="confirm-list" class="confirm-list"></dl></div><div class="dialog-actions"><button class="btn btn-secondary" type="button" data-close-dialog>取消</button><button id="confirm-save" class="btn btn-primary" type="button">確認儲存</button></div></dialog>
-  <dialog id="cancel-dialog" aria-labelledby="cancel-title"><div class="dialog-head"><h2 id="cancel-title">取消這次編輯？</h2><button class="icon-btn" type="button" data-close-cancel aria-label="關閉取消視窗"><i data-lucide="x"></i></button></div><div class="dialog-body"><p>尚未儲存的內容會被捨棄，Google Sheet 不會有任何更動。</p></div><div class="dialog-actions"><button class="btn btn-secondary" type="button" data-close-cancel>繼續編輯</button><button id="confirm-cancel" class="btn btn-danger" type="button">確認取消</button></div></dialog>
-  <div id="status-banner" class="status-banner" role="status" aria-live="polite"></div>
+  <dialog
+    id="confirm-dialog"
+    aria-labelledby="confirm-title"
+  >
+    <div class="dialog-head">
+      <h2 id="confirm-title">確認儲存內容</h2>
+
+      <button
+        class="icon-btn"
+        type="button"
+        data-close-dialog
+        aria-label="關閉確認視窗"
+      >
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <div class="dialog-body">
+      <p class="subtle">
+        請確認每一項資料，送出後將更新 Google Sheet。
+      </p>
+
+      <dl id="confirm-list" class="confirm-list"></dl>
+    </div>
+
+    <div class="dialog-actions">
+      <button
+        class="btn btn-secondary"
+        type="button"
+        data-close-dialog
+      >
+        取消
+      </button>
+
+      <button
+        id="confirm-save"
+        class="btn btn-primary"
+        type="button"
+      >
+        確認儲存
+      </button>
+    </div>
+  </dialog>
+
+  <dialog
+    id="cancel-dialog"
+    aria-labelledby="cancel-title"
+  >
+    <div class="dialog-head">
+      <h2 id="cancel-title">取消這次編輯？</h2>
+
+      <button
+        class="icon-btn"
+        type="button"
+        data-close-cancel
+        aria-label="關閉取消視窗"
+      >
+        <i data-lucide="x"></i>
+      </button>
+    </div>
+
+    <div class="dialog-body">
+      <p>
+        尚未儲存的內容會被捨棄，Google Sheet 不會有任何更動。
+      </p>
+    </div>
+
+    <div class="dialog-actions">
+      <button
+        class="btn btn-secondary"
+        type="button"
+        data-close-cancel
+      >
+        繼續編輯
+      </button>
+
+      <button
+        id="confirm-cancel"
+        class="btn btn-danger"
+        type="button"
+      >
+        確認取消
+      </button>
+    </div>
+  </dialog>
+
+  <div
+    id="status-banner"
+    class="status-banner"
+    role="status"
+    aria-live="polite"
+  ></div>
 
   <script>
-    'use strict';
-    const CONFIG={
-      API_URL:'https://script.google.com/macros/s/AKfycbzUBcIS-m-hB5-a98QjmErlCv7GKYbJTHQHUHnjntIhbfHz_qXu0Mnzk6_UgQsDETg/exec',
-      GOOGLE_CLIENT_ID:'312277502441-cfc9bhcr17nm80tq6lsmgvva60v35o6d.apps.googleusercontent.com'
+    "use strict";
+
+    const CONFIG = {
+      API_URL:
+        "https://script.google.com/macros/s/AKfycbzUBcIS-m-hB5-a98QjmErlCv7GKYbJTHQHUHnjntIhbfHz_qXu0Mnzk6_UgQsDETg/exec",
+      GOOGLE_CLIENT_ID:
+        "312277502441-cfc9bhcr17nm80tq6lsmgvva60v35o6d.apps.googleusercontent.com"
     };
-    const isDemo=false;
-    const state={token:'',user:null,items:[],currentItem:null,formMode:'new',draft:null,theme:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'};
-    const $=selector=>document.querySelector(selector);
-    const screens=[...document.querySelectorAll('.screen')];
-    const esc=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
-    const currency=value=>new Intl.NumberFormat('zh-TW',{style:'currency',currency:'TWD',maximumFractionDigits:0}).format(Number(value)||0);
-    const TAIPEI_TIME_ZONE = 'Asia/Taipei';
 
-function dateKey(value) {
-  if (!value) return '';
+    const isDemo = false;
+    const TAIPEI_TIME_ZONE = "Asia/Taipei";
 
-  const text = String(value).trim();
+    const state = {
+      token: "",
+      user: null,
+      items: [],
+      currentItem: null,
+      formMode: "new",
+      draft: null,
+      viewMonth: "",
+      theme: matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light"
+    };
 
-  // 已經是 yyyy-MM-dd、yyyy/MM/dd 或 ISO 日期時，
-  // 直接取出年月日，避免時區轉換造成日期前後移動。
-  const matched = text.match(
-    /^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/
-  );
+    const $ = selector => document.querySelector(selector);
 
-  if (matched) {
-    const year = matched[1];
-    const month = matched[2].padStart(2, '0');
-    const day = matched[3].padStart(2, '0');
-
-    return `${year}-${month}-${day}`;
-  }
-
-  // 相容舊資料：
-  // Tue Sep 15 2026 08:00:00 GMT+0800...
-  const parsedDate = new Date(text);
-
-  if (Number.isNaN(parsedDate.getTime())) {
-    return '';
-  }
-
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: TAIPEI_TIME_ZONE,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit'
-  }).formatToParts(parsedDate);
-
-  const getPart = type =>
-    parts.find(part => part.type === type)?.value || '';
-
-  return `${getPart('year')}-${getPart('month')}-${getPart('day')}`;
-}
-
-function shortDate(value) {
-  const normalizedDate = dateKey(value);
-
-  if (!normalizedDate) {
-    return '日期格式錯誤';
-  }
-
-  return normalizedDate.replaceAll('-', '/');
-}
-
-function currentMonthKey() {
-  const parts = new Intl.DateTimeFormat('en-CA', {
-    timeZone: TAIPEI_TIME_ZONE,
-    year: 'numeric',
-    month: '2-digit'
-  }).formatToParts(new Date());
-
-  const getPart = type =>
-    parts.find(part => part.type === type)?.value || '';
-
-  return `${getPart('year')}-${getPart('month')}`;
-}
-
-function amountNumber(value) {
-  const amount = Number(
-    String(value ?? 0)
-      .replaceAll(',', '')
-      .replace(/[^\d.-]/g, '')
-  );
-
-  return Number.isFinite(amount) ? amount : 0;
-}
-
-    const icons=()=>window.lucide?.createIcons();
-    const showScreen=id=>{screens.forEach(s=>s.hidden=s.id!==id);scrollTo({top:0,behavior:'instant'});icons()};
-    const toast=message=>{const el=$('#status-banner');el.textContent=message;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2600)};
-
-    const demoItems=[
-      {id:'demo-1',date:'2026-09-15',description:'市場食材採購',category:'進貨',type:'支出',amount:1580,note:'現金付款，收據已放入資料夾',createdAt:'2026-09-15T10:20:00',updatedAt:'2026-09-15T10:20:00'},
-      {id:'demo-2',date:'2026-09-15',description:'今日門市營業額',category:'營業收入',type:'收入',amount:12600,note:'現金 8,600；行動支付 4,000',createdAt:'2026-09-15T20:10:00',updatedAt:'2026-09-15T20:10:00'},
-      {id:'demo-3',date:'2026-09-14',description:'包裝紙袋',category:'進貨',type:'支出',amount:720,note:'',createdAt:'2026-09-14T13:05:00',updatedAt:'2026-09-14T13:05:00'}
+    const screens = [
+      ...document.querySelectorAll(".screen")
     ];
 
-    async function api(action,payload={}){
-      if(isDemo)return demoApi(action,payload);
-      const response=await fetch(CONFIG.API_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify({action,token:state.token,...payload})});
-      if(!response.ok)throw new Error(`連線失敗 (${response.status})`);
-      const data=await response.json();
-      if(!data.ok)throw new Error(data.message||'操作失敗');
-      return data;
-    }
-    async function demoApi(action,payload){
-      await new Promise(r=>setTimeout(r,260));
-      if(action==='login'){if(payload.password!=='1234')throw new Error('密碼錯誤');return{ok:true,token:'demo-token'}}
-      if(action==='listItems')return{ok:true,items:demoItems};
-      if(action==='createItem'){const item={...payload.item,id:'demo-'+Date.now(),createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};demoItems.unshift(item);return{ok:true,item}}
-      if(action==='updateItem'){const i=demoItems.findIndex(x=>x.id===payload.item.id);if(i<0)throw new Error('找不到項目');demoItems[i]={...demoItems[i],...payload.item,updatedAt:new Date().toISOString()};return{ok:true,item:demoItems[i]}}
-      throw new Error('未知操作');
-    }
+    const esc = value =>
+      String(value ?? "").replace(
+        /[&<>'"]/g,
+        character => ({
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          "'": "&#39;",
+          '"': "&quot;"
+        })[character]
+      );
 
-    function applyTheme(){document.documentElement.dataset.theme=state.theme;$('#theme-toggle').innerHTML=`<i data-lucide="${state.theme==='dark'?'sun':'moon'}"></i>`;$('#theme-toggle').setAttribute('aria-label',state.theme==='dark'?'切換淺色模式':'切換深色模式');icons()}
-    function navigate(route){location.hash=route;renderRoute()}
-    function renderRoute(){
-      if(!state.token){showScreen('login-screen');$('#logout-button').hidden=true;return}
-      $('#logout-button').hidden=false;
-      const hash=location.hash||'#home';
-      if(hash==='#home'){showScreen('home-screen');loadItems();return}
-      if(hash==='#new'){openForm('new');return}
-      if(hash.startsWith('#detail/')){openDetail(decodeURIComponent(hash.split('/')[1]||''));return}
-      if(hash.startsWith('#edit/')){openForm('edit',decodeURIComponent(hash.split('/')[1]||''));return}
-      navigate('#home');
-    }
+    const currency = value =>
+      new Intl.NumberFormat("zh-TW", {
+        style: "currency",
+        currency: "TWD",
+        maximumFractionDigits: 0
+      }).format(amountNumber(value));
 
-    async function loadItems(){
-      $('#list-loading').hidden=false;$('#ledger-list').hidden=true;$('#empty-state').hidden=true;
-      try{const result=await api('listItems');state.items=result.items||[];renderHome()}
-      catch(error){$('#list-loading').hidden=true;$('#empty-state').hidden=false;$('#empty-state').innerHTML=`<i data-lucide="wifi-off"></i><h2>讀取失敗</h2><p>${esc(error.message)}</p><button class="btn btn-secondary" type="button" onclick="loadItems()">重新讀取</button>`;icons()}
-    }
-    function renderHome() {
-  const monthKey = currentMonthKey();
-  const [year, monthNumber] = monthKey.split('-');
+    const icons = () => window.lucide?.createIcons();
 
-  // 保留所有資料，但先依照建立時間排列。
-  const allItems = [...state.items].sort((a, b) => {
-    const createdCompare = String(
-      b.createdAt || b.date || ''
-    ).localeCompare(
-      String(a.createdAt || a.date || '')
-    );
+    function dateKey(value) {
+      if (!value) return "";
 
-    if (createdCompare !== 0) {
-      return createdCompare;
-    }
+      const text = String(value).trim();
 
-    return dateKey(b.date).localeCompare(dateKey(a.date));
-  });
+      const matched = text.match(
+        /^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/
+      );
 
-  // 月份判斷必須使用「帳目日期」，不能使用建立時間。
-  const monthItems = allItems.filter(item => {
-    return dateKey(item.date).startsWith(monthKey);
-  });
+      if (matched) {
+        const year = matched[1];
+        const month = matched[2].padStart(2, "0");
+        const day = matched[3].padStart(2, "0");
 
-  let income = 0;
-  let expense = 0;
+        return `${year}-${month}-${day}`;
+      }
 
-  monthItems.forEach(item => {
-    const type = String(item.type || '').trim();
-    const amount = amountNumber(item.amount);
+      const parsedDate = new Date(text);
 
-    if (type === '收入') {
-      income += amount;
+      if (Number.isNaN(parsedDate.getTime())) {
+        return "";
+      }
+
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: TAIPEI_TIME_ZONE,
+        year: "numeric",
+        month: "2-digit",
+        day: "2-digit"
+      }).formatToParts(parsedDate);
+
+      const getPart = type =>
+        parts.find(part => part.type === type)?.value || "";
+
+      return [
+        getPart("year"),
+        getPart("month"),
+        getPart("day")
+      ].join("-");
     }
 
-    if (type === '支出') {
-      expense += amount;
+    function shortDate(value) {
+      const normalizedDate = dateKey(value);
+
+      if (!normalizedDate) {
+        return "日期格式錯誤";
+      }
+
+      return normalizedDate.replaceAll("-", "/");
     }
-  });
 
-  const balance = income - expense;
+    function currentMonthKey() {
+      const parts = new Intl.DateTimeFormat("en-CA", {
+        timeZone: TAIPEI_TIME_ZONE,
+        year: "numeric",
+        month: "2-digit"
+      }).formatToParts(new Date());
 
-  $('#summary-grid').innerHTML = `
-    <article class="summary-card balance">
-      <p class="summary-label">本月淨額</p>
-      <p class="summary-value">
-        ${esc(currency(balance))}
-      </p>
-    </article>
+      const getPart = type =>
+        parts.find(part => part.type === type)?.value || "";
 
-    <article class="summary-card">
-      <p class="summary-label">本月收入</p>
-      <p class="summary-value income-text">
-        ${esc(currency(income))}
-      </p>
-    </article>
+      return `${getPart("year")}-${getPart("month")}`;
+    }
 
-    <article class="summary-card">
-      <p class="summary-label">本月支出</p>
-      <p class="summary-value expense-text">
-        ${esc(currency(expense))}
-      </p>
-    </article>
-  `;
+    function itemMonthKey(value) {
+      return dateKey(value).slice(0, 7);
+    }
 
-  $('#home-subtitle').textContent =
-    `${Number(year)} 年 ${Number(monthNumber)} 月`;
+    function monthLabel(monthKey) {
+      const [year, month] = monthKey.split("-");
 
-  // 改成只計算目前月份的項目數量。
-  $('#item-count').textContent =
-    `共 ${monthItems.length} 筆`;
+      return `${Number(year)} 年 ${Number(month)} 月`;
+    }
 
-  $('#list-loading').hidden = true;
-  $('#empty-state').hidden = monthItems.length > 0;
-  $('#ledger-list').hidden = monthItems.length === 0;
+    function shiftMonthKey(monthKey, amount) {
+      const [year, month] = monthKey
+        .split("-")
+        .map(Number);
 
-  // 近期項目只顯示目前月份的帳目。
-  $('#ledger-list').innerHTML = monthItems
-    .slice(0, 30)
-    .map(item => {
-      const type = String(item.type || '').trim();
-      const isIncome = type === '收入';
+      const target = new Date(
+        Date.UTC(year, month - 1 + amount, 1)
+      );
 
-      return `
-        <li>
-          <button
-            class="ledger-button"
-            type="button"
-            data-item-id="${esc(item.id)}"
-          >
-            <span>
-              <span class="item-title">
-                ${esc(item.description || '未命名項目')}
-              </span>
+      return [
+        target.getUTCFullYear(),
+        String(target.getUTCMonth() + 1).padStart(2, "0")
+      ].join("-");
+    }
 
-              <span class="item-meta">
-                <span>${esc(item.category || '未分類')}</span>
-                <span class="dot"></span>
-                <span>${esc(type)}</span>
-              </span>
-            </span>
+    function amountNumber(value) {
+      const amount = Number(
+        String(value ?? 0)
+          .replaceAll(",", "")
+          .replace(/[^\d.-]/g, "")
+      );
 
-            <span>
-              <span class="item-amount ${
-                isIncome ? 'income-text' : 'expense-text'
-              }">
-                ${isIncome ? '+' : '−'}
-                ${esc(currency(amountNumber(item.amount)))}
-              </span>
+      return Number.isFinite(amount) ? amount : 0;
+    }
 
-              <span class="item-date">
-                ${esc(shortDate(item.date))}
-              </span>
-            </span>
-          </button>
-        </li>
-      `;
-    })
-    .join('');
+    function showScreen(id) {
+      screens.forEach(screen => {
+        screen.hidden = screen.id !== id;
+      });
 
-  icons();
-}
+      window.scrollTo({
+        top: 0,
+        behavior: "auto"
+      });
 
-    function findItem(id){return state.items.find(item=>String(item.id)===String(id))}
-    function openDetail(id){
-      const item=findItem(id);if(!item){toast('找不到這筆項目');navigate('#home');return}state.currentItem=item;showScreen('detail-screen');
-      $('#detail-content').innerHTML=`<article class="detail-card amount-hero"><p class="subtle">${esc(item.type)}金額</p><p class="amount-large">${item.type==='收入'?'+':'−'} ${esc(currency(item.amount))}</p></article><article class="detail-card"><dl class="detail-grid"><div class="detail-row"><dt class="detail-term">項目說明</dt><dd class="detail-value">${esc(item.description||'—')}</dd></div>
-        <div class="detail-row">
-          <dt class="detail-term">日期</dt>
-          <dd class="detail-value">
-            ${esc(item.date ? shortDate(item.date) : '—')}
-          </dd>
-        </div>
-<div class="detail-row"><dt class="detail-term">類別</dt><dd class="detail-value">${esc(item.category||'—')}</dd></div><div class="detail-row"><dt class="detail-term">收支類型</dt><dd class="detail-value">${esc(item.type||'—')}</dd></div><div class="detail-row"><dt class="detail-term">備註</dt><dd class="detail-value">${esc(item.note||'無')}</dd></div></dl></article>`;
       icons();
     }
 
-    function openForm(mode,id=''){
-      state.formMode=mode;const item=mode==='edit'?findItem(id):null;if(mode==='edit'&&!item){toast('找不到要修改的項目');navigate('#home');return}
-      state.currentItem=item;state.draft=mode==='edit'?{...item}:{date:'',description:'',category:'',type:'',amount:'',note:''};
-      $('#form-eyebrow').textContent=mode==='edit'?'修改資料':'新增資料';$('#form-title').textContent=mode==='edit'?'修改項目':'新增項目';$('#submit-entry').textContent=mode==='edit'?'確認修改':'確認新增';fillForm(state.draft);clearErrors();showScreen('form-screen');
-    }
-    function fillForm(data) {
-      const form = $('#entry-form');
+    function toast(message) {
+      const element = $("#status-banner");
 
-      // type="date" 必須使用 yyyy-MM-dd。
+      element.textContent = message;
+      element.classList.add("show");
+
+      clearTimeout(toast.timer);
+
+      toast.timer = setTimeout(() => {
+        element.classList.remove("show");
+      }, 2600);
+    }
+
+    async function api(action, payload = {}) {
+      const response = await fetch(CONFIG.API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify({
+          action,
+          token: state.token,
+          ...payload
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error(`連線失敗 (${response.status})`);
+      }
+
+      const data = await response.json();
+
+      if (!data.ok) {
+        throw new Error(data.message || "操作失敗");
+      }
+
+      return data;
+    }
+
+    function applyTheme() {
+      document.documentElement.dataset.theme = state.theme;
+
+      $("#theme-toggle").innerHTML = `
+        <i data-lucide="${
+          state.theme === "dark" ? "sun" : "moon"
+        }"></i>
+      `;
+
+      $("#theme-toggle").setAttribute(
+        "aria-label",
+        state.theme === "dark"
+          ? "切換淺色模式"
+          : "切換深色模式"
+      );
+
+      icons();
+    }
+
+    function navigate(route) {
+      if (location.hash === route) {
+        renderRoute();
+        return;
+      }
+
+      location.hash = route;
+    }
+
+    function renderRoute() {
+      if (!state.token) {
+        showScreen("login-screen");
+        $("#logout-button").hidden = true;
+        return;
+      }
+
+      $("#logout-button").hidden = false;
+
+      const hash = location.hash || "#home";
+
+      if (hash === "#home") {
+        showScreen("home-screen");
+        loadItems();
+        return;
+      }
+
+      if (hash === "#new") {
+        openForm("new");
+        return;
+      }
+
+      if (hash.startsWith("#detail/")) {
+        openDetail(
+          decodeURIComponent(hash.split("/")[1] || "")
+        );
+        return;
+      }
+
+      if (hash.startsWith("#edit/")) {
+        openForm(
+          "edit",
+          decodeURIComponent(hash.split("/")[1] || "")
+        );
+        return;
+      }
+
+      navigate("#home");
+    }
+
+    function renderNormalEmptyState() {
+      $("#empty-state").innerHTML = `
+        <i data-lucide="calendar-x"></i>
+        <h2>這個月份還沒有項目</h2>
+        <p>
+          你可以切換到其他月份，或按右下角加號新增一筆帳目。
+        </p>
+      `;
+    }
+
+    async function loadItems() {
+      $("#list-loading").hidden = false;
+      $("#ledger-list").hidden = true;
+      $("#empty-state").hidden = true;
+
+      try {
+        const result = await api("listItems");
+
+        state.items = Array.isArray(result.items)
+          ? result.items
+          : [];
+
+        renderHome();
+      } catch (error) {
+        $("#list-loading").hidden = true;
+        $("#ledger-list").hidden = true;
+        $("#empty-state").hidden = false;
+
+        $("#empty-state").innerHTML = `
+          <i data-lucide="wifi-off"></i>
+          <h2>讀取失敗</h2>
+          <p>${esc(error.message)}</p>
+          <button
+            id="retry-load"
+            class="btn btn-secondary"
+            type="button"
+          >
+            重新讀取
+          </button>
+        `;
+
+        $("#retry-load")?.addEventListener(
+          "click",
+          loadItems
+        );
+
+        icons();
+      }
+    }
+
+    function buildLedgerItem(item) {
+      const type = String(item.type || "").trim();
+      const isIncome = type === "收入";
+
+      const listItem = document.createElement("li");
+      const button = document.createElement("button");
+
+      button.className = "ledger-button";
+      button.type = "button";
+      button.dataset.itemId = String(item.id || "");
+
+      button.setAttribute(
+        "aria-label",
+        `查看${item.description || "未命名項目"}`
+      );
+
+      button.innerHTML = `
+        <span>
+          <span class="item-title">
+            ${esc(item.description || "未命名項目")}
+          </span>
+
+          <span class="item-meta">
+            <span>${esc(item.category || "未分類")}</span>
+            <span class="dot" aria-hidden="true"></span>
+            <span>${esc(type || "未設定")}</span>
+          </span>
+        </span>
+
+        <span class="item-side">
+          <span class="item-amount ${
+            isIncome ? "income-text" : "expense-text"
+          }">
+            ${isIncome ? "+" : "−"}
+            ${esc(currency(item.amount))}
+          </span>
+
+          <span class="item-date">
+            ${esc(shortDate(item.date))}
+          </span>
+        </span>
+      `;
+
+      listItem.append(button);
+
+      return listItem;
+    }
+
+    function renderHome() {
+      if (!state.viewMonth) {
+        state.viewMonth = currentMonthKey();
+      }
+
+      const selectedMonth = state.viewMonth;
+
+      const monthItems = [...state.items]
+        .filter(item => {
+          return itemMonthKey(item.date) === selectedMonth;
+        })
+        .sort((a, b) => {
+          const dateComparison = dateKey(b.date)
+            .localeCompare(dateKey(a.date));
+
+          if (dateComparison !== 0) {
+            return dateComparison;
+          }
+
+          return String(b.createdAt || "")
+            .localeCompare(String(a.createdAt || ""));
+        });
+
+      let income = 0;
+      let expense = 0;
+
+      monthItems.forEach(item => {
+        const type = String(item.type || "").trim();
+        const amount = amountNumber(item.amount);
+
+        if (type === "收入") {
+          income += amount;
+        }
+
+        if (type === "支出") {
+          expense += amount;
+        }
+      });
+
+      const balance = income - expense;
+      const label = monthLabel(selectedMonth);
+
+      $("#home-subtitle").textContent = label;
+      $("#item-count").textContent =
+        `共 ${monthItems.length} 筆`;
+
+      $("#previous-month").setAttribute(
+        "aria-label",
+        `查看 ${monthLabel(
+          shiftMonthKey(selectedMonth, -1)
+        )}`
+      );
+
+      $("#previous-month").title =
+        `查看 ${monthLabel(
+          shiftMonthKey(selectedMonth, -1)
+        )}`;
+
+      $("#next-month").setAttribute(
+        "aria-label",
+        `查看 ${monthLabel(
+          shiftMonthKey(selectedMonth, 1)
+        )}`
+      );
+
+      $("#next-month").title =
+        `查看 ${monthLabel(
+          shiftMonthKey(selectedMonth, 1)
+        )}`;
+
+      $("#summary-grid").setAttribute(
+        "aria-label",
+        `${label}收支摘要`
+      );
+
+      $("#summary-grid").innerHTML = `
+        <article class="summary-card balance">
+          <p class="summary-label">當月淨額</p>
+          <p class="summary-value">
+            ${esc(currency(balance))}
+          </p>
+        </article>
+
+        <article class="summary-card">
+          <p class="summary-label">當月收入</p>
+          <p class="summary-value income-text">
+            ${esc(currency(income))}
+          </p>
+        </article>
+
+        <article class="summary-card">
+          <p class="summary-label">當月支出</p>
+          <p class="summary-value expense-text">
+            ${esc(currency(expense))}
+          </p>
+        </article>
+      `;
+
+      $("#list-loading").hidden = true;
+
+      const ledgerList = $("#ledger-list");
+      ledgerList.replaceChildren();
+
+      monthItems.forEach(item => {
+        ledgerList.append(buildLedgerItem(item));
+      });
+
+      const hasItems = monthItems.length > 0;
+
+      ledgerList.hidden = !hasItems;
+      $("#empty-state").hidden = hasItems;
+
+      if (!hasItems) {
+        renderNormalEmptyState();
+      }
+
+      icons();
+    }
+
+    function changeMonth(amount) {
+      state.viewMonth = shiftMonthKey(
+        state.viewMonth || currentMonthKey(),
+        amount
+      );
+
+      renderHome();
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth"
+      });
+    }
+
+    function findItem(id) {
+      return state.items.find(item => {
+        return String(item.id) === String(id);
+      });
+    }
+
+    function openDetail(id) {
+      const item = findItem(id);
+
+      if (!item) {
+        toast("找不到這筆項目");
+        navigate("#home");
+        return;
+      }
+
+      state.currentItem = item;
+
+      showScreen("detail-screen");
+
+      const isIncome =
+        String(item.type || "").trim() === "收入";
+
+      $("#detail-content").innerHTML = `
+        <article class="detail-card amount-hero">
+          <p class="subtle">
+            ${esc(item.type)}金額
+          </p>
+
+          <p class="amount-large">
+            ${isIncome ? "+" : "−"}
+            ${esc(currency(item.amount))}
+          </p>
+        </article>
+
+        <article class="detail-card">
+          <dl class="detail-grid">
+            <div class="detail-row">
+              <dt class="detail-term">項目說明</dt>
+              <dd class="detail-value">
+                ${esc(item.description || "—")}
+              </dd>
+            </div>
+
+            <div class="detail-row">
+              <dt class="detail-term">日期</dt>
+              <dd class="detail-value">
+                ${esc(
+                  item.date
+                    ? shortDate(item.date)
+                    : "—"
+                )}
+              </dd>
+            </div>
+
+            <div class="detail-row">
+              <dt class="detail-term">類別</dt>
+              <dd class="detail-value">
+                ${esc(item.category || "—")}
+              </dd>
+            </div>
+
+            <div class="detail-row">
+              <dt class="detail-term">收支類型</dt>
+              <dd class="detail-value">
+                ${esc(item.type || "—")}
+              </dd>
+            </div>
+
+            <div class="detail-row">
+              <dt class="detail-term">備註</dt>
+              <dd class="detail-value">
+                ${esc(item.note || "無")}
+              </dd>
+            </div>
+          </dl>
+        </article>
+      `;
+
+      icons();
+    }
+
+    function openForm(mode, id = "") {
+      const item =
+        mode === "edit"
+          ? findItem(id)
+          : null;
+
+      if (mode === "edit" && !item) {
+        toast("找不到要修改的項目");
+        navigate("#home");
+        return;
+      }
+
+      state.formMode = mode;
+      state.currentItem = item;
+
+      state.draft =
+        mode === "edit"
+          ? { ...item }
+          : {
+              date: "",
+              description: "",
+              category: "",
+              type: "",
+              amount: "",
+              note: ""
+            };
+
+      $("#form-eyebrow").textContent =
+        mode === "edit"
+          ? "修改資料"
+          : "新增資料";
+
+      $("#form-title").textContent =
+        mode === "edit"
+          ? "修改項目"
+          : "新增項目";
+
+      $("#submit-entry").textContent =
+        mode === "edit"
+          ? "確認修改"
+          : "確認新增";
+
+      fillForm(state.draft);
+      clearErrors();
+      showScreen("form-screen");
+    }
+
+    function fillForm(data) {
+      const form = $("#entry-form");
+
       form.elements.date.value = dateKey(data.date);
-      form.elements.category.value = data.category || '';
-      form.elements.description.value = data.description || '';
-      form.elements.amount.value = data.amount ?? '';
-      form.elements.note.value = data.note || '';
+      form.elements.category.value = data.category || "";
+      form.elements.description.value =
+        data.description || "";
+      form.elements.amount.value = data.amount ?? "";
+      form.elements.note.value = data.note || "";
 
       [...form.elements.type].forEach(radio => {
         radio.checked =
-          radio.value === String(data.type || '').trim();
+          radio.value ===
+          String(data.type || "").trim();
       });
     }
-    function readForm(){const form=new FormData($('#entry-form'));return{id:state.currentItem?.id||'',date:String(form.get('date')||'').trim(),category:String(form.get('category')||'').trim(),description:String(form.get('description')||'').trim(),type:String(form.get('type')||'').trim(),amount:String(form.get('amount')||'').trim(),note:String(form.get('note')||'').trim()}}
-    function validate(item){const errors={};if(!item.date)errors.date='請選擇日期';if(!item.category)errors.category='請輸入類別';if(!item.description)errors.description='請輸入項目說明';if(!item.type)errors.type='請選擇收入或支出';if(item.amount===''||Number(item.amount)<0||!Number.isFinite(Number(item.amount)))errors.amount='請輸入有效金額';return errors}
-    function clearErrors(){document.querySelectorAll('[data-error-for]').forEach(el=>el.textContent='')}
-    function showErrors(errors){clearErrors();Object.entries(errors).forEach(([key,value])=>{const el=document.querySelector(`[data-error-for="${key}"]`);if(el)el.textContent=value});const first=Object.keys(errors)[0];document.querySelector(`[name="${first}"]`)?.focus()}
-    function openSaveDialog(item){
-      state.draft=item;const title=state.formMode==='edit'?'確認此次修改':'確認新增項目';$('#confirm-title').textContent=title;
-      const rows = [
-        ['日期', shortDate(item.date)],
-        ['項目說明', item.description],
-        ['類別', item.category],
-        ['收支類型', item.type],
-        ['金額', currency(amountNumber(item.amount))],
-        ['備註', item.note || '無']
-      ];
-      $('#confirm-list').innerHTML=rows.map(([k,v])=>`<div class="confirm-row"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');$('#confirm-dialog').showModal();icons();
-    }
-    function requestCancel(){state.draft=readForm();$('#cancel-dialog').showModal();icons()}
-    function cancelTarget(){return state.formMode==='edit'&&state.currentItem?`#detail/${encodeURIComponent(state.currentItem.id)}`:'#home'}
 
-    function initGoogleSignIn(){
-      const status=$('#login-status'),container=$('#google-signin-button');
-      if(CONFIG.GOOGLE_CLIENT_ID.startsWith('PASTE_')){status.textContent='尚未設定 Google Client ID。';return}
-      if(!window.google?.accounts?.id){setTimeout(initGoogleSignIn,250);return}
-      google.accounts.id.initialize({client_id:CONFIG.GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:false,cancel_on_tap_outside:true});
-      container.innerHTML='';
-      google.accounts.id.renderButton(container,{type:'standard',theme:state.theme==='dark'?'filled_black':'outline',size:'large',shape:'rectangular',text:'signin_with',logo_alignment:'left',locale:'zh_TW',width:300});
+    function readForm() {
+      const form = new FormData($("#entry-form"));
+
+      return {
+        id: state.currentItem?.id || "",
+        date: String(form.get("date") || "").trim(),
+        category: String(
+          form.get("category") || ""
+        ).trim(),
+        description: String(
+          form.get("description") || ""
+        ).trim(),
+        type: String(form.get("type") || "").trim(),
+        amount: String(form.get("amount") || "").trim(),
+        note: String(form.get("note") || "").trim()
+      };
     }
-    async function handleGoogleCredential(response){
-      const status=$('#login-status');
-      status.textContent='正在驗證 Google 帳號…';
-      state.token=response.credential;
-      try{const result=await api('login');state.user=result.user;status.textContent='';navigate('#home')}
-      catch(error){state.token='';state.user=null;status.textContent=error.message;google.accounts.id.disableAutoSelect()}
+
+    function validate(item) {
+      const errors = {};
+
+      if (!item.date) {
+        errors.date = "請選擇日期";
+      }
+
+      if (!item.category) {
+        errors.category = "請輸入類別";
+      }
+
+      if (!item.description) {
+        errors.description = "請輸入項目說明";
+      }
+
+      if (!item.type) {
+        errors.type = "請選擇收入或支出";
+      }
+
+      if (
+        item.amount === "" ||
+        !Number.isFinite(Number(item.amount)) ||
+        Number(item.amount) <= 0
+      ) {
+        errors.amount = "金額必須大於 0";
+      }
+
+      return errors;
     }
-    $('#theme-toggle').addEventListener('click',()=>{state.theme=state.theme==='dark'?'light':'dark';applyTheme();if(!state.token)initGoogleSignIn()});
-    $('#logout-button').addEventListener('click',()=>{google.accounts.id.disableAutoSelect();state.token='';state.user=null;state.items=[];location.hash='';renderRoute();initGoogleSignIn();toast('已安全登出')});
-    $('#add-button').addEventListener('click',()=>navigate('#new'));
-    $('#ledger-list').addEventListener('click',event=>{const button=event.target.closest('[data-item-id]');if(button)navigate(`#detail/${encodeURIComponent(button.dataset.itemId)}`)});
-    $('#detail-back').addEventListener('click',()=>navigate('#home'));
-    $('#edit-button').addEventListener('click',()=>state.currentItem&&navigate(`#edit/${encodeURIComponent(state.currentItem.id)}`));
-    $('#form-back').addEventListener('click',requestCancel);$('#cancel-entry').addEventListener('click',requestCancel);
-    $('#entry-form').addEventListener('input',()=>{state.draft=readForm()});
-    $('#entry-form').addEventListener('submit',event=>{event.preventDefault();const item=readForm(),errors=validate(item);if(Object.keys(errors).length){showErrors(errors);return}clearErrors();openSaveDialog(item)});
-    document.querySelectorAll('[data-close-dialog]').forEach(button=>button.addEventListener('click',()=>$('#confirm-dialog').close()));
-    document.querySelectorAll('[data-close-cancel]').forEach(button=>button.addEventListener('click',()=>$('#cancel-dialog').close()));
-    $('#confirm-cancel').addEventListener('click',()=>{$('#cancel-dialog').close();navigate(cancelTarget())});
-    $('#confirm-save').addEventListener('click',async()=>{const button=$('#confirm-save');button.disabled=true;button.textContent='儲存中…';try{const action=state.formMode==='edit'?'updateItem':'createItem';const result=await api(action,{item:{...state.draft,amount:Number(state.draft.amount)}});const index=state.items.findIndex(i=>i.id===result.item.id);if(index>=0)state.items[index]=result.item;else state.items.unshift(result.item);state.currentItem=result.item;$('#confirm-dialog').close();toast(state.formMode==='edit'?'項目已更新':'項目已新增');navigate(`#detail/${encodeURIComponent(result.item.id)}`)}catch(error){toast(error.message)}finally{button.disabled=false;button.textContent='確認儲存'}});
-    window.addEventListener('hashchange',renderRoute);
-    document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('#form-screen').hidden&&!$('#confirm-dialog').open&&!$('#cancel-dialog').open)requestCancel()});
-    window.addEventListener('DOMContentLoaded',()=>{applyTheme();icons();renderRoute();initGoogleSignIn()});
+
+    function clearErrors() {
+      document
+        .querySelectorAll("[data-error-for]")
+        .forEach(element => {
+          element.textContent = "";
+        });
+    }
+
+    function showErrors(errors) {
+      clearErrors();
+
+      Object.entries(errors).forEach(
+        ([key, value]) => {
+          const element = document.querySelector(
+            `[data-error-for="${key}"]`
+          );
+
+          if (element) {
+            element.textContent = value;
+          }
+        }
+      );
+
+      const firstError = Object.keys(errors)[0];
+
+      document.querySelector(
+        `[name="${firstError}"]`
+      )?.focus();
+    }
+
+    function openSaveDialog(item) {
+      state.draft = item;
+
+      $("#confirm-title").textContent =
+        state.formMode === "edit"
+          ? "確認此次修改"
+          : "確認新增項目";
+
+      const rows = [
+        ["日期", shortDate(item.date)],
+        ["項目說明", item.description],
+        ["類別", item.category],
+        ["收支類型", item.type],
+        ["金額", currency(item.amount)],
+        ["備註", item.note || "無"]
+      ];
+
+      $("#confirm-list").innerHTML = rows
+        .map(([key, value]) => {
+          return `
+            <div class="confirm-row">
+              <dt>${esc(key)}</dt>
+              <dd>${esc(value)}</dd>
+            </div>
+          `;
+        })
+        .join("");
+
+      $("#confirm-dialog").showModal();
+      icons();
+    }
+
+    function requestCancel() {
+      state.draft = readForm();
+      $("#cancel-dialog").showModal();
+      icons();
+    }
+
+    function cancelTarget() {
+      if (
+        state.formMode === "edit" &&
+        state.currentItem
+      ) {
+        return `#detail/${encodeURIComponent(
+          state.currentItem.id
+        )}`;
+      }
+
+      return "#home";
+    }
+
+    function initGoogleSignIn() {
+      const status = $("#login-status");
+      const container = $("#google-signin-button");
+
+      if (
+        CONFIG.GOOGLE_CLIENT_ID.startsWith("PASTE_")
+      ) {
+        status.textContent =
+          "尚未設定 Google Client ID。";
+        return;
+      }
+
+      if (!window.google?.accounts?.id) {
+        setTimeout(initGoogleSignIn, 250);
+        return;
+      }
+
+      google.accounts.id.initialize({
+        client_id: CONFIG.GOOGLE_CLIENT_ID,
+        callback: handleGoogleCredential,
+        auto_select: false,
+        cancel_on_tap_outside: true
+      });
+
+      container.innerHTML = "";
+
+      google.accounts.id.renderButton(
+        container,
+        {
+          type: "standard",
+          theme:
+            state.theme === "dark"
+              ? "filled_black"
+              : "outline",
+          size: "large",
+          shape: "rectangular",
+          text: "signin_with",
+          logo_alignment: "left",
+          locale: "zh_TW",
+          width: 300
+        }
+      );
+    }
+
+    async function handleGoogleCredential(response) {
+      const status = $("#login-status");
+
+      status.textContent =
+        "正在驗證 Google 帳號…";
+
+      state.token = response.credential;
+
+      try {
+        const result = await api("login");
+
+        state.user = result.user;
+        state.viewMonth = currentMonthKey();
+        status.textContent = "";
+
+        navigate("#home");
+      } catch (error) {
+        state.token = "";
+        state.user = null;
+        status.textContent = error.message;
+
+        google.accounts.id.disableAutoSelect();
+      }
+    }
+
+    $("#theme-toggle").addEventListener(
+      "click",
+      () => {
+        state.theme =
+          state.theme === "dark"
+            ? "light"
+            : "dark";
+
+        applyTheme();
+
+        if (!state.token) {
+          initGoogleSignIn();
+        }
+      }
+    );
+
+    $("#logout-button").addEventListener(
+      "click",
+      () => {
+        google.accounts.id.disableAutoSelect();
+
+        state.token = "";
+        state.user = null;
+        state.items = [];
+        state.currentItem = null;
+        state.viewMonth = currentMonthKey();
+
+        location.hash = "";
+
+        renderRoute();
+        initGoogleSignIn();
+        toast("已安全登出");
+      }
+    );
+
+    $("#previous-month").addEventListener(
+      "click",
+      () => changeMonth(-1)
+    );
+
+    $("#next-month").addEventListener(
+      "click",
+      () => changeMonth(1)
+    );
+
+    $("#add-button").addEventListener(
+      "click",
+      () => navigate("#new")
+    );
+
+    $("#ledger-list").addEventListener(
+      "click",
+      event => {
+        const button = event.target.closest(
+          "[data-item-id]"
+        );
+
+        if (button) {
+          navigate(
+            `#detail/${encodeURIComponent(
+              button.dataset.itemId
+            )}`
+          );
+        }
+      }
+    );
+
+    $("#detail-back").addEventListener(
+      "click",
+      () => navigate("#home")
+    );
+
+    $("#edit-button").addEventListener(
+      "click",
+      () => {
+        if (state.currentItem) {
+          navigate(
+            `#edit/${encodeURIComponent(
+              state.currentItem.id
+            )}`
+          );
+        }
+      }
+    );
+
+    $("#form-back").addEventListener(
+      "click",
+      requestCancel
+    );
+
+    $("#cancel-entry").addEventListener(
+      "click",
+      requestCancel
+    );
+
+    $("#entry-form").addEventListener(
+      "input",
+      () => {
+        state.draft = readForm();
+      }
+    );
+
+    $("#entry-form").addEventListener(
+      "submit",
+      event => {
+        event.preventDefault();
+
+        const item = readForm();
+        const errors = validate(item);
+
+        if (Object.keys(errors).length) {
+          showErrors(errors);
+          return;
+        }
+
+        clearErrors();
+        openSaveDialog(item);
+      }
+    );
+
+    document
+      .querySelectorAll("[data-close-dialog]")
+      .forEach(button => {
+        button.addEventListener(
+          "click",
+          () => $("#confirm-dialog").close()
+        );
+      });
+
+    document
+      .querySelectorAll("[data-close-cancel]")
+      .forEach(button => {
+        button.addEventListener(
+          "click",
+          () => $("#cancel-dialog").close()
+        );
+      });
+
+    $("#confirm-cancel").addEventListener(
+      "click",
+      () => {
+        $("#cancel-dialog").close();
+        navigate(cancelTarget());
+      }
+    );
+
+    $("#confirm-save").addEventListener(
+      "click",
+      async () => {
+        const button = $("#confirm-save");
+
+        button.disabled = true;
+        button.textContent = "儲存中…";
+
+        try {
+          const action =
+            state.formMode === "edit"
+              ? "updateItem"
+              : "createItem";
+
+          const result = await api(action, {
+            item: {
+              ...state.draft,
+              amount: amountNumber(
+                state.draft.amount
+              )
+            }
+          });
+
+          const index = state.items.findIndex(
+            item => {
+              return (
+                String(item.id) ===
+                String(result.item.id)
+              );
+            }
+          );
+
+          if (index >= 0) {
+            state.items[index] = result.item;
+          } else {
+            state.items.unshift(result.item);
+          }
+
+          state.currentItem = result.item;
+
+          const savedMonth = itemMonthKey(
+            result.item.date
+          );
+
+          if (savedMonth) {
+            state.viewMonth = savedMonth;
+          }
+
+          $("#confirm-dialog").close();
+
+          toast(
+            state.formMode === "edit"
+              ? "項目已更新"
+              : "項目已新增"
+          );
+
+          navigate(
+            `#detail/${encodeURIComponent(
+              result.item.id
+            )}`
+          );
+        } catch (error) {
+          toast(error.message);
+        } finally {
+          button.disabled = false;
+          button.textContent = "確認儲存";
+        }
+      }
+    );
+
+    window.addEventListener(
+      "hashchange",
+      renderRoute
+    );
+
+    document.addEventListener(
+      "keydown",
+      event => {
+        if (
+          event.key === "Escape" &&
+          !$("#form-screen").hidden &&
+          !$("#confirm-dialog").open &&
+          !$("#cancel-dialog").open
+        ) {
+          requestCancel();
+        }
+      }
+    );
+
+    window.addEventListener(
+      "DOMContentLoaded",
+      () => {
+        state.viewMonth = currentMonthKey();
+
+        applyTheme();
+        icons();
+        renderRoute();
+        initGoogleSignIn();
+      }
+    );
   </script>
 </body>
 </html>
