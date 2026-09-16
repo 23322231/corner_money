@@ -9,9 +9,8 @@
   <meta name="theme-color" content="#f5f4ef">
   <title>店面記帳簿</title>
 
-  <link rel="preconnect" href="https://api.fontshare.com">
-  <link
-    href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=general-sans@600,700&display=swap"
+  //api.fontshare.com">
+  //api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=general-sans@600,700&display=swap"
     rel="stylesheet"
   >
 
@@ -354,7 +353,7 @@
     .month-navigation {
       width: min(100%, 22rem);
       display: grid;
-      grid-template-columns: 2.75rem minmax(9rem, 1fr) 2.75rem;
+      grid-template-columns: 2.75rem minmax(0, 1fr) 2.75rem;
       align-items: center;
       gap: var(--space-2);
       margin-top: var(--space-3);
@@ -396,6 +395,27 @@
       border-radius: var(--radius-lg);
       padding: var(--space-4);
       box-shadow: var(--shadow-sm);
+      text-align: left;
+    }
+
+    button.summary-card {
+      width: 100%;
+      font: inherit;
+      color: inherit;
+    }
+
+    button.summary-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-md);
+      border-color: color-mix(
+        in oklab,
+        var(--primary) 32%,
+        var(--border)
+      );
+    }
+
+    button.summary-card:active {
+      transform: translateY(0) scale(0.995);
     }
 
     .summary-card.balance {
@@ -403,6 +423,24 @@
       background: var(--text);
       color: var(--bg);
       border-color: transparent;
+    }
+
+    .summary-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-2);
+    }
+
+    .summary-hint {
+      display: inline-flex;
+      align-items: center;
+      color: var(--muted);
+    }
+
+    .summary-hint svg {
+      width: 1rem;
+      height: 1rem;
     }
 
     .summary-label {
@@ -440,6 +478,33 @@
       align-items: end;
       gap: var(--space-3);
       margin-bottom: var(--space-3);
+      flex-wrap: wrap;
+    }
+
+    .filter-field {
+      display: flex;
+      align-items: center;
+      gap: var(--space-2);
+      font-size: var(--text-sm);
+      color: var(--muted);
+    }
+
+    .filter-field select {
+      width: auto;
+      min-width: 0;
+      min-height: 2.5rem;
+      padding: var(--space-2) var(--space-8) var(--space-2) var(--space-3);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-md);
+      background: var(--surface);
+      color: var(--text);
+      font-size: var(--text-sm);
+      font-weight: 600;
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2362675d' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right var(--space-3) center;
     }
 
     .ledger-list {
@@ -527,6 +592,19 @@
       color: var(--muted);
       font-size: var(--text-xs);
       font-variant-numeric: tabular-nums;
+    }
+
+    .breakdown-total {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: var(--space-5);
+      margin-bottom: var(--space-6);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .breakdown-total .summary-value {
+      font-size: var(--text-xl);
     }
 
     .fab {
@@ -641,6 +719,7 @@
     .field {
       display: grid;
       gap: var(--space-2);
+      min-width: 0;
     }
 
     label,
@@ -657,11 +736,31 @@
     select,
     textarea {
       width: 100%;
+      min-width: 0;
       min-height: 3rem;
       padding: var(--space-3) var(--space-4);
       border: 1px solid var(--border);
       border-radius: var(--radius-md);
       background: var(--bg);
+    }
+
+    input[type="date"] {
+      -webkit-appearance: none;
+      appearance: none;
+      max-width: 100%;
+    }
+
+    input[type="date"]::-webkit-date-and-time-value {
+      text-align: left;
+    }
+
+    .form-grid select {
+      -webkit-appearance: none;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2362675d' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right var(--space-4) center;
+      padding-right: var(--space-10);
     }
 
     input:hover,
@@ -1063,6 +1162,18 @@
       .month-navigation {
         width: 100%;
       }
+
+      .section-head {
+        align-items: stretch;
+      }
+
+      .filter-field {
+        width: 100%;
+      }
+
+      .filter-field select {
+        flex: 1;
+      }
     }
 
     @media (prefers-reduced-motion: reduce) {
@@ -1078,7 +1189,8 @@
 
     @media (hover: none) {
       .ledger-button:hover,
-      .fab:hover {
+      .fab:hover,
+      button.summary-card:hover {
         transform: none;
       }
     }
