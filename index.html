@@ -151,7 +151,81 @@
     const screens=[...document.querySelectorAll('.screen')];
     const esc=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
     const currency=value=>new Intl.NumberFormat('zh-TW',{style:'currency',currency:'TWD',maximumFractionDigits:0}).format(Number(value)||0);
-    const shortDate=value=>{if(!value)return '未填日期';const date=new Date(value+'T00:00:00');return Number.isNaN(date.getTime())?value:new Intl.DateTimeFormat('zh-TW',{month:'short',day:'numeric'}).format(date)};
+    const TAIPEI_TIME_ZONE = 'Asia/Taipei';
+
+function dateKey(value) {
+  if (!value) return '';
+
+  const text = String(value).trim();
+
+  // 已經是 yyyy-MM-dd、yyyy/MM/dd 或 ISO 日期時，
+  // 直接取出年月日，避免時區轉換造成日期前後移動。
+  const matched = text.match(
+    /^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/
+  );
+
+  if (matched) {
+    const year = matched[1];
+    const month = matched[2].padStart(2, '0');
+    const day = matched[3].padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+  }
+
+  // 相容舊資料：
+  // Tue Sep 15 2026 08:00:00 GMT+0800...
+  const parsedDate = new Date(text);
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return '';
+  }
+
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: TAIPEI_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit'
+  }).formatToParts(parsedDate);
+
+  const getPart = type =>
+    parts.find(part => part.type === type)?.value || '';
+
+  return `${getPart('year')}-${getPart('month')}-${getPart('day')}`;
+}
+
+function shortDate(value) {
+  const normalizedDate = dateKey(value);
+
+  if (!normalizedDate) {
+    return '日期格式錯誤';
+  }
+
+  return normalizedDate.replaceAll('-', '/');
+}
+
+function currentMonthKey() {
+  const parts = new Intl.DateTimeFormat('en-CA', {
+    timeZone: TAIPEI_TIME_ZONE,
+    year: 'numeric',
+    month: '2-digit'
+  }).formatToParts(new Date());
+
+  const getPart = type =>
+    parts.find(part => part.type === type)?.value || '';
+
+  return `${getPart('year')}-${getPart('month')}`;
+}
+
+function amountNumber(value) {
+  const amount = Number(
+    String(value ?? 0)
+      .replaceAll(',', '')
+      .replace(/[^\d.-]/g, '')
+  );
+
+  return Number.isFinite(amount) ? amount : 0;
+}
+
     const icons=()=>window.lucide?.createIcons();
     const showScreen=id=>{screens.forEach(s=>s.hidden=s.id!==id);scrollTo({top:0,behavior:'instant'});icons()};
     const toast=message=>{const el=$('#status-banner');el.textContent=message;el.classList.add('show');clearTimeout(toast.timer);toast.timer=setTimeout(()=>el.classList.remove('show'),2600)};
@@ -197,23 +271,140 @@
       try{const result=await api('listItems');state.items=result.items||[];renderHome()}
       catch(error){$('#list-loading').hidden=true;$('#empty-state').hidden=false;$('#empty-state').innerHTML=`<i data-lucide="wifi-off"></i><h2>讀取失敗</h2><p>${esc(error.message)}</p><button class="btn btn-secondary" type="button" onclick="loadItems()">重新讀取</button>`;icons()}
     }
-    function renderHome(){
-      const items=[...state.items].sort((a,b)=>String(b.createdAt||b.date).localeCompare(String(a.createdAt||a.date)));
-      const now=new Date(),monthKey=`${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-      const month=items.filter(i=>String(i.date).startsWith(monthKey));
-      const income=month.filter(i=>i.type==='收入').reduce((s,i)=>s+Number(i.amount||0),0),expense=month.filter(i=>i.type==='支出').reduce((s,i)=>s+Number(i.amount||0),0);
-      $('#summary-grid').innerHTML=`<article class="summary-card balance"><p class="summary-label">本月淨額</p><p class="summary-value">${esc(currency(income-expense))}</p></article><article class="summary-card"><p class="summary-label">本月收入</p><p class="summary-value income-text">${esc(currency(income))}</p></article><article class="summary-card"><p class="summary-label">本月支出</p><p class="summary-value expense-text">${esc(currency(expense))}</p></article>`;
-      $('#home-subtitle').textContent=`${now.getFullYear()} 年 ${now.getMonth()+1} 月`;
-      $('#item-count').textContent=`共 ${items.length} 筆`;
-      $('#list-loading').hidden=true;$('#empty-state').hidden=items.length>0;$('#ledger-list').hidden=items.length===0;
-      $('#ledger-list').innerHTML=items.slice(0,30).map(item=>`<li><button class="ledger-button" type="button" data-item-id="${esc(item.id)}"><span><span class="item-title">${esc(item.description||'未命名項目')}</span><span class="item-meta"><span>${esc(item.category||'未分類')}</span><span class="dot"></span><span>${esc(item.type)}</span></span></span><span><span class="item-amount ${item.type==='收入'?'income-text':'expense-text'}">${item.type==='收入'?'+':'−'} ${esc(currency(item.amount))}</span><span class="item-date">${esc(shortDate(item.date))}</span></span></button></li>`).join('');
-      icons();
+    function renderHome() {
+  const monthKey = currentMonthKey();
+  const [year, monthNumber] = monthKey.split('-');
+
+  // 保留所有資料，但先依照建立時間排列。
+  const allItems = [...state.items].sort((a, b) => {
+    const createdCompare = String(
+      b.createdAt || b.date || ''
+    ).localeCompare(
+      String(a.createdAt || a.date || '')
+    );
+
+    if (createdCompare !== 0) {
+      return createdCompare;
     }
+
+    return dateKey(b.date).localeCompare(dateKey(a.date));
+  });
+
+  // 月份判斷必須使用「帳目日期」，不能使用建立時間。
+  const monthItems = allItems.filter(item => {
+    return dateKey(item.date).startsWith(monthKey);
+  });
+
+  let income = 0;
+  let expense = 0;
+
+  monthItems.forEach(item => {
+    const type = String(item.type || '').trim();
+    const amount = amountNumber(item.amount);
+
+    if (type === '收入') {
+      income += amount;
+    }
+
+    if (type === '支出') {
+      expense += amount;
+    }
+  });
+
+  const balance = income - expense;
+
+  $('#summary-grid').innerHTML = `
+    <article class="summary-card balance">
+      <p class="summary-label">本月淨額</p>
+      <p class="summary-value">
+        ${esc(currency(balance))}
+      </p>
+    </article>
+
+    <article class="summary-card">
+      <p class="summary-label">本月收入</p>
+      <p class="summary-value income-text">
+        ${esc(currency(income))}
+      </p>
+    </article>
+
+    <article class="summary-card">
+      <p class="summary-label">本月支出</p>
+      <p class="summary-value expense-text">
+        ${esc(currency(expense))}
+      </p>
+    </article>
+  `;
+
+  $('#home-subtitle').textContent =
+    `${Number(year)} 年 ${Number(monthNumber)} 月`;
+
+  // 改成只計算目前月份的項目數量。
+  $('#item-count').textContent =
+    `共 ${monthItems.length} 筆`;
+
+  $('#list-loading').hidden = true;
+  $('#empty-state').hidden = monthItems.length > 0;
+  $('#ledger-list').hidden = monthItems.length === 0;
+
+  // 近期項目只顯示目前月份的帳目。
+  $('#ledger-list').innerHTML = monthItems
+    .slice(0, 30)
+    .map(item => {
+      const type = String(item.type || '').trim();
+      const isIncome = type === '收入';
+
+      return `
+        >
+          <button
+            class="ledger-button"
+            type="button"
+            data-item-id="${esc(item.id)}"
+          >
+            <span>
+              <span class="item-title">
+                ${esc(item.description || '未命名項目')}
+              </span>
+
+              <span class="item-meta">
+                <span>${esc(item.category || '未分類')}</span>
+                <span class="dot"></span>
+                <span>${esc(type)}</span>
+              </span>
+            </span>
+
+            <span>
+              <span class="item-amount ${
+                isIncome ? 'income-text' : 'expense-text'
+              }">
+                ${isIncome ? '+' : '−'}
+                ${esc(currency(amountNumber(item.amount)))}
+              </span>
+
+              <span class="item-date">
+                ${esc(shortDate(item.date))}
+              </span>
+            </span>
+          </button>
+        </li>
+      `;
+    })
+    .join('');
+
+  icons();
+}
 
     function findItem(id){return state.items.find(item=>String(item.id)===String(id))}
     function openDetail(id){
       const item=findItem(id);if(!item){toast('找不到這筆項目');navigate('#home');return}state.currentItem=item;showScreen('detail-screen');
-      $('#detail-content').innerHTML=`<article class="detail-card amount-hero"><p class="subtle">${esc(item.type)}金額</p><p class="amount-large">${item.type==='收入'?'+':'−'} ${esc(currency(item.amount))}</p></article><article class="detail-card"><dl class="detail-grid"><div class="detail-row"><dt class="detail-term">項目說明</dt><dd class="detail-value">${esc(item.description||'—')}</dd></div><div class="detail-row"><dt class="detail-term">日期</dt><dd class="detail-value">${esc(item.date||'—')}</dd></div><div class="detail-row"><dt class="detail-term">類別</dt><dd class="detail-value">${esc(item.category||'—')}</dd></div><div class="detail-row"><dt class="detail-term">收支類型</dt><dd class="detail-value">${esc(item.type||'—')}</dd></div><div class="detail-row"><dt class="detail-term">備註</dt><dd class="detail-value">${esc(item.note||'無')}</dd></div></dl></article>`;
+      $('#detail-content').innerHTML=`<article class="detail-card amount-hero"><p class="subtle">${esc(item.type)}金額</p><p class="amount-large">${item.type==='收入'?'+':'−'} ${esc(currency(item.amount))}</p></article><article class="detail-card"><dl class="detail-grid"><div class="detail-row"><dt class="detail-term">項目說明</dt><dd class="detail-value">${esc(item.description||'—')}</dd></div>
+        <div class="detail-row">
+          <dt class="detail-term">日期</dt>
+          <dd class="detail-value">
+            ${esc(item.date ? shortDate(item.date) : '—')}
+          </dd>
+        </div>
+<div class="detail-row"><dt class="detail-term">類別</dt><dd class="detail-value">${esc(item.category||'—')}</dd></div><div class="detail-row"><dt class="detail-term">收支類型</dt><dd class="detail-value">${esc(item.type||'—')}</dd></div><div class="detail-row"><dt class="detail-term">備註</dt><dd class="detail-value">${esc(item.note||'無')}</dd></div></dl></article>`;
       icons();
     }
 
@@ -222,14 +413,35 @@
       state.currentItem=item;state.draft=mode==='edit'?{...item}:{date:'',description:'',category:'',type:'',amount:'',note:''};
       $('#form-eyebrow').textContent=mode==='edit'?'修改資料':'新增資料';$('#form-title').textContent=mode==='edit'?'修改項目':'新增項目';$('#submit-entry').textContent=mode==='edit'?'確認修改':'確認新增';fillForm(state.draft);clearErrors();showScreen('form-screen');
     }
-    function fillForm(data){const form=$('#entry-form');form.elements.date.value=data.date||'';form.elements.category.value=data.category||'';form.elements.description.value=data.description||'';form.elements.amount.value=data.amount??'';form.elements.note.value=data.note||'';[...form.elements.type].forEach(r=>r.checked=r.value===data.type)}
+    function fillForm(data) {
+      const form = $('#entry-form');
+
+      // type="date" 必須使用 yyyy-MM-dd。
+      form.elements.date.value = dateKey(data.date);
+      form.elements.category.value = data.category || '';
+      form.elements.description.value = data.description || '';
+      form.elements.amount.value = data.amount ?? '';
+      form.elements.note.value = data.note || '';
+
+      [...form.elements.type].forEach(radio => {
+        radio.checked =
+          radio.value === String(data.type || '').trim();
+      });
+    }
     function readForm(){const form=new FormData($('#entry-form'));return{id:state.currentItem?.id||'',date:String(form.get('date')||'').trim(),category:String(form.get('category')||'').trim(),description:String(form.get('description')||'').trim(),type:String(form.get('type')||'').trim(),amount:String(form.get('amount')||'').trim(),note:String(form.get('note')||'').trim()}}
     function validate(item){const errors={};if(!item.date)errors.date='請選擇日期';if(!item.category)errors.category='請輸入類別';if(!item.description)errors.description='請輸入項目說明';if(!item.type)errors.type='請選擇收入或支出';if(item.amount===''||Number(item.amount)<0||!Number.isFinite(Number(item.amount)))errors.amount='請輸入有效金額';return errors}
     function clearErrors(){document.querySelectorAll('[data-error-for]').forEach(el=>el.textContent='')}
     function showErrors(errors){clearErrors();Object.entries(errors).forEach(([key,value])=>{const el=document.querySelector(`[data-error-for="${key}"]`);if(el)el.textContent=value});const first=Object.keys(errors)[0];document.querySelector(`[name="${first}"]`)?.focus()}
     function openSaveDialog(item){
       state.draft=item;const title=state.formMode==='edit'?'確認此次修改':'確認新增項目';$('#confirm-title').textContent=title;
-      const rows=[['日期',item.date],['項目說明',item.description],['類別',item.category],['收支類型',item.type],['金額',currency(item.amount)],['備註',item.note||'無']];
+      const rows = [
+        ['日期', shortDate(item.date)],
+        ['項目說明', item.description],
+        ['類別', item.category],
+        ['收支類型', item.type],
+        ['金額', currency(amountNumber(item.amount))],
+        ['備註', item.note || '無']
+      ];
       $('#confirm-list').innerHTML=rows.map(([k,v])=>`<div class="confirm-row"><dt>${esc(k)}</dt><dd>${esc(v)}</dd></div>`).join('');$('#confirm-dialog').showModal();icons();
     }
     function requestCancel(){state.draft=readForm();$('#cancel-dialog').showModal();icons()}
