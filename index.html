@@ -8,6 +8,7 @@
   <link rel="preconnect" href="https://api.fontshare.com">
   <link href="https://api.fontshare.com/v2/css?f[]=satoshi@400,500,700&f[]=general-sans@600,700&display=swap" rel="stylesheet">
   <script src="https://unpkg.com/lucide@0.468.0/dist/umd/lucide.min.js" defer></script>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
   <style>
     /* Art direction: small-shop ledger → warm, calm, trustworthy.
        Palette: paper neutrals with restrained teal; Typography: General Sans + Satoshi; Density: balanced. */
@@ -65,7 +66,7 @@
     fieldset{border:0}.segment{display:grid;grid-template-columns:1fr 1fr;gap:var(--space-2);margin-top:var(--space-2)}.segment input{position:absolute;opacity:0;pointer-events:none}.segment label{min-height:3rem;display:flex;align-items:center;justify-content:center;border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg);cursor:pointer}.segment input:checked+label{background:var(--primary-soft);border-color:var(--primary);color:var(--primary)}.segment input:focus-visible+label{outline:2px solid var(--primary);outline-offset:3px}
     .form-actions{position:sticky;bottom:0;z-index:10;margin:var(--space-6) calc(var(--space-4)*-1) calc((var(--space-16) + env(safe-area-inset-bottom))*-1);padding:var(--space-3) var(--space-4) calc(var(--space-3) + env(safe-area-inset-bottom));background:color-mix(in oklab,var(--bg) 91%,transparent);backdrop-filter:blur(16px);border-top:1px solid var(--border);display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3)}
     .btn{min-height:3rem;padding:var(--space-3) var(--space-5);border-radius:var(--radius-md);font-weight:700;font-size:var(--text-sm);display:inline-flex;align-items:center;justify-content:center;gap:var(--space-2)}.btn-primary{background:var(--success);color:#fff}.btn-primary:hover{background:var(--success-hover)}.btn-secondary{background:var(--surface);border:1px solid var(--border)}.btn-secondary:hover{background:var(--surface-2)}.btn-danger{background:var(--danger);color:#fff}.btn:active{transform:scale(.98)}
-    .login-wrap{min-height:calc(100dvh - 4.25rem);display:grid;place-items:center;padding:var(--space-6) 0}.login-card{width:min(100%,27rem);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:clamp(var(--space-5),6vw,var(--space-8));box-shadow:var(--shadow-md)}.login-mark{width:3rem;height:3rem;color:var(--primary);margin-bottom:var(--space-5)}.login-card h1{margin-bottom:var(--space-2)}.login-form{display:grid;gap:var(--space-4);margin-top:var(--space-6)}.login-status{min-height:1.5rem;color:var(--danger);font-size:var(--text-sm)}.demo-note{margin-top:var(--space-5);padding:var(--space-3);border-radius:var(--radius-md);background:var(--primary-soft);color:var(--primary);font-size:var(--text-xs)}
+    .login-wrap{min-height:calc(100dvh - 4.25rem);display:grid;place-items:center;padding:var(--space-6) 0}.login-card{width:min(100%,27rem);background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-xl);padding:clamp(var(--space-5),6vw,var(--space-8));box-shadow:var(--shadow-md)}.login-mark{width:3rem;height:3rem;color:var(--primary);margin-bottom:var(--space-5)}.login-card h1{margin-bottom:var(--space-2)}.login-form{display:grid;gap:var(--space-4);margin-top:var(--space-6)}.login-status{min-height:1.5rem;color:var(--danger);font-size:var(--text-sm)}.google-signin{display:flex;justify-content:center;min-height:44px;margin-top:var(--space-6)}.login-help{margin-top:var(--space-4);text-align:center}.demo-note{margin-top:var(--space-5);padding:var(--space-3);border-radius:var(--radius-md);background:var(--primary-soft);color:var(--primary);font-size:var(--text-xs)}
     .empty-state{text-align:center;background:var(--surface);border:1px dashed var(--border);border-radius:var(--radius-xl);padding:var(--space-12) var(--space-5);color:var(--muted)}.empty-state svg{width:2.2rem;height:2.2rem;margin:0 auto var(--space-4);color:var(--primary)}.empty-state h2{color:var(--text);margin-bottom:var(--space-2)}
     .skeleton{height:5.2rem;border-radius:var(--radius-lg);background:linear-gradient(90deg,var(--surface-2) 25%,var(--surface-dynamic) 50%,var(--surface-2) 75%);background-size:200% 100%;animation:shimmer 1.4s infinite}@keyframes shimmer{to{background-position:-200% 0}}
     dialog{width:min(calc(100% - 2rem),34rem);max-height:min(84dvh,45rem);margin:auto;border:1px solid var(--border);border-radius:var(--radius-xl);background:var(--surface);color:var(--text);box-shadow:var(--shadow-lg);padding:0;overflow:hidden}dialog::backdrop{background:rgba(18,23,18,.54);backdrop-filter:blur(3px)}.dialog-head{display:flex;align-items:center;justify-content:space-between;gap:var(--space-3);padding:var(--space-5);border-bottom:1px solid var(--border)}.dialog-body{padding:var(--space-5);overflow:auto;max-height:56dvh}.dialog-actions{display:flex;justify-content:flex-end;gap:var(--space-3);padding:var(--space-4) var(--space-5);border-top:1px solid var(--border);background:var(--bg)}.confirm-list{display:grid;margin-top:var(--space-4)}.confirm-row{display:grid;grid-template-columns:6rem minmax(0,1fr);gap:var(--space-3);padding:var(--space-3) 0;border-bottom:1px solid var(--border)}.confirm-row:last-child{border-bottom:0}.confirm-row dt{color:var(--muted);font-size:var(--text-sm)}.confirm-row dd{font-weight:500;overflow-wrap:anywhere;white-space:pre-wrap}
@@ -95,9 +96,9 @@
       <section id="login-screen" class="screen" aria-labelledby="login-title">
         <div class="login-wrap"><div class="login-card">
           <svg class="login-mark" viewBox="0 0 48 48" fill="none" aria-hidden="true"><rect x="10" y="21" width="28" height="21" rx="6" stroke="currentColor" stroke-width="3"/><path d="M17 21v-5a7 7 0 0 1 14 0v5M24 29v6" stroke="currentColor" stroke-width="3" stroke-linecap="round"/></svg>
-          <p class="eyebrow">僅限店內使用</p><h1 id="login-title">登入記帳簿</h1><p class="subtle">輸入管理密碼後即可查看與編輯帳目。</p>
-          <form id="login-form" class="login-form"><div class="field"><label for="password">密碼</label><input id="password" name="password" type="password" autocomplete="current-password" required placeholder="請輸入密碼"></div><button class="btn btn-primary" type="submit">登入</button><p id="login-status" class="login-status" role="status" aria-live="polite"></p></form>
-          <p id="demo-note" class="demo-note" hidden>目前是展示模式，密碼為 1234。接上 Apps Script 後此提示會自動消失。</p>
+          <p class="eyebrow">僅限授權帳號使用</p><h1 id="login-title">登入記帳簿</h1><p class="subtle">請使用已授權的 Google 帳號登入，才能查看與編輯帳目。</p>
+          <div id="google-signin-button" class="google-signin" aria-label="使用 Google 帳號登入"></div>
+          <p id="login-status" class="login-status login-help" role="status" aria-live="polite"></p>
         </div></div>
       </section>
 
@@ -140,9 +141,12 @@
 
   <script>
     'use strict';
-    const CONFIG={API_URL:'https://script.google.com/macros/s/AKfycbzUBcIS-m-hB5-a98QjmErlCv7GKYbJTHQHUHnjntIhbfHz_qXu0Mnzk6_UgQsDETg/exec'};
-    const isDemo = !CONFIG.API_URL || CONFIG.API_URL === 'PASTE_YOUR_WEB_APP_URL_HERE';
-    const state={token:'',items:[],currentItem:null,formMode:'new',draft:null,theme:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'};
+    const CONFIG={
+      API_URL:'https://script.google.com/macros/s/AKfycbzUBcIS-m-hB5-a98QjmErlCv7GKYbJTHQHUHnjntIhbfHz_qXu0Mnzk6_UgQsDETg/exec',
+      GOOGLE_CLIENT_ID:'312277502441-cfc9bhcr17nm80tq6lsmgvva60v35o6d.apps.googleusercontent.com'
+    };
+    const isDemo=false;
+    const state={token:'',user:null,items:[],currentItem:null,formMode:'new',draft:null,theme:matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'};
     const $=selector=>document.querySelector(selector);
     const screens=[...document.querySelectorAll('.screen')];
     const esc=value=>String(value??'').replace(/[&<>'"]/g,char=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[char]));
@@ -231,9 +235,23 @@
     function requestCancel(){state.draft=readForm();$('#cancel-dialog').showModal();icons()}
     function cancelTarget(){return state.formMode==='edit'&&state.currentItem?`#detail/${encodeURIComponent(state.currentItem.id)}`:'#home'}
 
-    $('#login-form').addEventListener('submit',async event=>{event.preventDefault();const button=event.submitter,status=$('#login-status');button.disabled=true;status.textContent='登入中…';try{const result=await api('login',{password:$('#password').value});state.token=result.token;status.textContent='';$('#password').value='';navigate('#home')}catch(error){status.textContent=error.message}finally{button.disabled=false}});
-    $('#theme-toggle').addEventListener('click',()=>{state.theme=state.theme==='dark'?'light':'dark';applyTheme()});
-    $('#logout-button').addEventListener('click',()=>{state.token='';state.items=[];location.hash='';renderRoute();toast('已安全登出')});
+    function initGoogleSignIn(){
+      const status=$('#login-status'),container=$('#google-signin-button');
+      if(CONFIG.GOOGLE_CLIENT_ID.startsWith('PASTE_')){status.textContent='尚未設定 Google Client ID。';return}
+      if(!window.google?.accounts?.id){setTimeout(initGoogleSignIn,250);return}
+      google.accounts.id.initialize({client_id:CONFIG.GOOGLE_CLIENT_ID,callback:handleGoogleCredential,auto_select:false,cancel_on_tap_outside:true});
+      container.innerHTML='';
+      google.accounts.id.renderButton(container,{type:'standard',theme:state.theme==='dark'?'filled_black':'outline',size:'large',shape:'rectangular',text:'signin_with',logo_alignment:'left',locale:'zh_TW',width:300});
+    }
+    async function handleGoogleCredential(response){
+      const status=$('#login-status');
+      status.textContent='正在驗證 Google 帳號…';
+      state.token=response.credential;
+      try{const result=await api('login');state.user=result.user;status.textContent='';navigate('#home')}
+      catch(error){state.token='';state.user=null;status.textContent=error.message;google.accounts.id.disableAutoSelect()}
+    }
+    $('#theme-toggle').addEventListener('click',()=>{state.theme=state.theme==='dark'?'light':'dark';applyTheme();if(!state.token)initGoogleSignIn()});
+    $('#logout-button').addEventListener('click',()=>{google.accounts.id.disableAutoSelect();state.token='';state.user=null;state.items=[];location.hash='';renderRoute();initGoogleSignIn();toast('已安全登出')});
     $('#add-button').addEventListener('click',()=>navigate('#new'));
     $('#ledger-list').addEventListener('click',event=>{const button=event.target.closest('[data-item-id]');if(button)navigate(`#detail/${encodeURIComponent(button.dataset.itemId)}`)});
     $('#detail-back').addEventListener('click',()=>navigate('#home'));
@@ -247,7 +265,7 @@
     $('#confirm-save').addEventListener('click',async()=>{const button=$('#confirm-save');button.disabled=true;button.textContent='儲存中…';try{const action=state.formMode==='edit'?'updateItem':'createItem';const result=await api(action,{item:{...state.draft,amount:Number(state.draft.amount)}});const index=state.items.findIndex(i=>i.id===result.item.id);if(index>=0)state.items[index]=result.item;else state.items.unshift(result.item);state.currentItem=result.item;$('#confirm-dialog').close();toast(state.formMode==='edit'?'項目已更新':'項目已新增');navigate(`#detail/${encodeURIComponent(result.item.id)}`)}catch(error){toast(error.message)}finally{button.disabled=false;button.textContent='確認儲存'}});
     window.addEventListener('hashchange',renderRoute);
     document.addEventListener('keydown',event=>{if(event.key==='Escape'&&!$('#form-screen').hidden&&!$('#confirm-dialog').open&&!$('#cancel-dialog').open)requestCancel()});
-    window.addEventListener('DOMContentLoaded',()=>{applyTheme();$('#demo-note').hidden=!isDemo;icons();renderRoute()});
+    window.addEventListener('DOMContentLoaded',()=>{applyTheme();icons();renderRoute();initGoogleSignIn()});
   </script>
 </body>
 </html>
