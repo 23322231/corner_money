@@ -1131,6 +1131,9 @@
           <button id="theme-toggle" class="icon-btn" type="button" aria-label="切換深色模式" title="切換顯示模式">
             <i data-lucide="moon"></i>
           </button>
+          <button id="backup-button" class="icon-btn" type="button" aria-label="下載備份" title="下載備份（CSV）" hidden>
+            <i data-lucide="download"></i>
+          </button>
           <button id="logout-button" class="icon-btn" type="button" aria-label="登出" title="登出" hidden>
             <i data-lucide="log-out"></i>
           </button>
@@ -1566,9 +1569,11 @@
       if (!state.token) {
         showScreen("login-screen");
         $("#logout-button").hidden = true;
+        $("#backup-button").hidden = true;
         return;
       }
       $("#logout-button").hidden = false;
+      $("#backup-button").hidden = false;
 
       const hash = location.hash || "#home";
 
@@ -1976,6 +1981,34 @@
       state.theme = state.theme === "dark" ? "light" : "dark";
       applyTheme();
       if (!state.token) initGoogleSignIn();
+    });
+
+    // 下載備份：向後端重新抓最新資料，存成 CSV 到這台電腦／手機
+    $("#backup-button").addEventListener("click", async () => {
+      try {
+        toast("正在準備備份…");
+        const { items } = await api("listItems");
+        const headers = ["ID", "日期", "項目說明", "類別", "收支類型", "金額", "備註", "建立時間", "更新時間"];
+        const keys = ["id", "date", "description", "category", "type", "amount", "note", "createdAt", "updatedAt"];
+        const cell = value => {
+          const text = String(value ?? "");
+          return /[",\r\n]/.test(text) ? `"${text.replace(/"/g, '""')}"` : text;
+        };
+        const csv = [headers, ...items.map(item => keys.map(key => item[key]))]
+          .map(row => row.map(cell).join(","))
+          .join("\r\n");
+        const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8" });
+        const link = document.createElement("a");
+        link.href = URL.createObjectURL(blob);
+        link.download = `記帳備份_${new Date().toLocaleDateString("sv-SE")}.csv`;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        setTimeout(() => URL.revokeObjectURL(link.href), 1000);
+        toast(`已下載 ${items.length} 筆備份`);
+      } catch (error) {
+        toast(error.message);
+      }
     });
 
     $("#logout-button").addEventListener("click", () => {
